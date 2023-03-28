@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_manager_flutter_app/db/database_helper.dart';
-import 'package:ticket_manager_flutter_app/provider/dark_theme_provider.dart';
-import 'package:ticket_manager_flutter_app/provider/envirorment_provider.dart';
-import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/choose_screen.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/home_screen.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/login_screen.dart';
+import 'package:lead_generation_flutter_app/db/database_helper.dart';
+import 'package:lead_generation_flutter_app/provider/dark_theme_provider.dart';
+import 'package:lead_generation_flutter_app/provider/envirorment_provider.dart';
+import 'package:lead_generation_flutter_app/provider/offline_mode_provider.dart';
+import 'package:lead_generation_flutter_app/ui/screens/choose_screen.dart';
+import 'package:lead_generation_flutter_app/ui/screens/home_screen.dart';
+import 'package:lead_generation_flutter_app/ui/screens/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
 
 import 'model/user_model/user.dart';
 

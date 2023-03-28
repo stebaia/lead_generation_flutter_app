@@ -15,7 +15,7 @@ class VivaticketApi {
 
   static String serverName(Envirorment envirorment) {
     if (envirorment == Envirorment.production) {
-      return 'rnmanager.vivaticket.com';
+      return 'rnmanagertest.vivaticket.com';
     } else {
       return 'rnmanagertest.vivaticket.com';
     }

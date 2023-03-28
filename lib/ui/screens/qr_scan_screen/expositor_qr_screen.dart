@@ -6,25 +6,25 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_manager_flutter_app/db/database_helper.dart';
-import 'package:ticket_manager_flutter_app/model/check_manager_model/check_model.dart';
-import 'package:ticket_manager_flutter_app/model/history_model/history.dart';
-import 'package:ticket_manager_flutter_app/model/scan_offline.dart';
-import 'package:ticket_manager_flutter_app/network/history_service.dart';
-import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
-import 'package:ticket_manager_flutter_app/store/enable_store/enable_store.dart';
-import 'package:ticket_manager_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
-import 'package:ticket_manager_flutter_app/store/normalScan_store/normalScan_store.dart';
-import 'package:ticket_manager_flutter_app/store/visibility_store/visibility_store.dart';
+import 'package:lead_generation_flutter_app/db/database_helper.dart';
+import 'package:lead_generation_flutter_app/model/check_manager_model/check_model.dart';
+import 'package:lead_generation_flutter_app/model/history_model/history.dart';
+import 'package:lead_generation_flutter_app/model/scan_offline.dart';
+import 'package:lead_generation_flutter_app/network/history_service.dart';
+import 'package:lead_generation_flutter_app/provider/offline_mode_provider.dart';
+import 'package:lead_generation_flutter_app/store/enable_store/enable_store.dart';
+import 'package:lead_generation_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
+import 'package:lead_generation_flutter_app/store/normalScan_store/normalScan_store.dart';
+import 'package:lead_generation_flutter_app/store/visibility_store/visibility_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ticket_manager_flutter_app/ui/components/history_modal.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/expositor_detail_screen.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/expositors_screen.dart';
-import 'package:ticket_manager_flutter_app/utils/envirorment.dart';
-import 'package:ticket_manager_flutter_app/utils/extension.dart';
-import 'package:ticket_manager_flutter_app/utils/sound_helper.dart';
-import 'package:ticket_manager_flutter_app/utils/sound_play.dart';
-import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
+import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
+import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
+import 'package:lead_generation_flutter_app/utils/envirorment.dart';
+import 'package:lead_generation_flutter_app/utils/extension.dart';
+import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
+import 'package:lead_generation_flutter_app/utils/sound_play.dart';
+import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
 
 import '../../../model/user_model/user.dart';
 import '../../../network/visitors_service.dart';
@@ -132,15 +132,18 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
-                          await showInformationDialog(
-                              context,
-                              themeChange.darkTheme
-                                  ? Colors.black
-                                  : Colors.white,
-                              themeChange.darkTheme
-                                  ? Colors.white
-                                  : Colors.black);
-
+                          
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) =>
+                                        ExpositorDetailScreen(
+                                          user: widget.user,
+                                          isNew: false,
+                                          codice20: codiceScan,
+                                        ))));
+                          
                           //visibilityStore.setSelected(false);
 
                           //cameraController.stop();

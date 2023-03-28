@@ -9,10 +9,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_manager_flutter_app/model/id_value_model.dart';
-import 'package:ticket_manager_flutter_app/model/user_model/user.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/home_screen.dart';
-import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/model/id_value_model.dart';
+import 'package:lead_generation_flutter_app/model/user_model/user.dart';
+import 'package:lead_generation_flutter_app/ui/screens/home_screen.dart';
+import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
 
 import '../../db/database_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

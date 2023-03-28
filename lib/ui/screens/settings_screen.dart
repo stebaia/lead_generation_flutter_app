@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ticket_manager_flutter_app/network/logout_service.dart';
-import 'package:ticket_manager_flutter_app/provider/offline_mode_provider.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/expositor_detail_screen.dart';
+import 'package:lead_generation_flutter_app/network/logout_service.dart';
+import 'package:lead_generation_flutter_app/provider/offline_mode_provider.dart';
+import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
 
 import '../../db/database_helper.dart';
 import '../../model/user_model/user.dart';

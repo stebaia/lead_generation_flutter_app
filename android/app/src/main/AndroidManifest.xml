@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vivaticket.lead_generation_flutter_app">
+    package="com.leadgenerationapp">
      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <application
    android:requestLegacyExternalStorage="true"
-        android:label="Ticket Manager"
+        android:label="LeadGenerationApp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <provider

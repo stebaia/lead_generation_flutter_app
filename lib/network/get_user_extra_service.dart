@@ -21,7 +21,6 @@ class GetUserExtraService {
         <soap12:Body>
           <GetUtenteExtra xmlns="http://tempuri.org/">            
             <idextra>$idUtente</idextra>
-            <idutilizzatore>$idUtilizzatore</idutilizzatore>
           </GetUtenteExtra>
         </soap12:Body>
       </soap12:Envelope>

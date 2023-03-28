@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/expositor_detail_screen.dart';
-import 'package:ticket_manager_flutter_app/utils/csv_exporter.dart';
+import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
+import 'package:lead_generation_flutter_app/utils/csv_exporter.dart';
 
 import '../../model/expositor_mapper/expositor_mapper.dart';
 import '../../model/expositor_model/expositor_model.dart';

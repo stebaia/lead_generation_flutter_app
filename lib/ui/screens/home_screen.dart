@@ -4,12 +4,12 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_manager_flutter_app/model/user_model/user.dart';
-import 'package:ticket_manager_flutter_app/store/bottomNavigationBar_store/bottomNavigation_store.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/expositors_screen.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/initqr_screen.dart';
-import 'package:ticket_manager_flutter_app/ui/screens/settings_screen.dart';
-import 'package:ticket_manager_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/model/user_model/user.dart';
+import 'package:lead_generation_flutter_app/store/bottomNavigationBar_store/bottomNavigation_store.dart';
+import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
+import 'package:lead_generation_flutter_app/ui/screens/initqr_screen.dart';
+import 'package:lead_generation_flutter_app/ui/screens/settings_screen.dart';
+import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../provider/dark_theme_provider.dart';

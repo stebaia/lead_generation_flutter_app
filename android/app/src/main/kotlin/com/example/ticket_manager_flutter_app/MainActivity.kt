@@ -1,5 +1,4 @@
-package com.example.ticket_manager_flutter_app
-
+package com.leadgenerationapp
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity: FlutterActivity() {

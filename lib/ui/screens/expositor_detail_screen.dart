@@ -5,16 +5,17 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_manager_flutter_app/model/expositor_mapper/expositor_mapper.dart';
-import 'package:ticket_manager_flutter_app/model/user_model/user.dart';
-import 'package:ticket_manager_flutter_app/network/get_user_extra_by_20_service.dart';
-import 'package:ticket_manager_flutter_app/network/get_user_extra_service.dart';
-import 'package:ticket_manager_flutter_app/network/set_utente_app.dart';
-import 'package:ticket_manager_flutter_app/network/set_utente_app_manual_service.dart';
-import 'package:ticket_manager_flutter_app/provider/envirorment_provider.dart';
+import 'package:lead_generation_flutter_app/model/expositor_mapper/expositor_mapper.dart';
+import 'package:lead_generation_flutter_app/model/user_model/user.dart';
+import 'package:lead_generation_flutter_app/network/get_user_extra_by_20_service.dart';
+import 'package:lead_generation_flutter_app/network/get_user_extra_service.dart';
+import 'package:lead_generation_flutter_app/network/set_utente_app.dart';
+import 'package:lead_generation_flutter_app/network/set_utente_app_manual_service.dart';
+import 'package:lead_generation_flutter_app/provider/envirorment_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ticket_manager_flutter_app/store/selected_item_store/selected_item_store.dart';
-import 'package:ticket_manager_flutter_app/utils/nations_utils.dart';
+import 'package:lead_generation_flutter_app/store/selected_item_store/selected_item_store.dart';
+import 'package:lead_generation_flutter_app/store/visibility_store/visibility_store.dart';
+import 'package:lead_generation_flutter_app/utils/nations_utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../utils/custom_colors.dart';
@@ -53,6 +54,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
 
   SelectedItemyStore selectedItemyStoreNation = SelectedItemyStore();
   SelectedItemyStore selectedItemyStoreProvince = SelectedItemyStore();
+  VisibilityStore visibilityStore = VisibilityStore();
   int star = 0;
   String selectedValue = "";
   String selectedValueProvince = "";
@@ -71,8 +73,10 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
     idUtente = widget.idUtente;
     codice20 = widget.codice20;
     isNew = widget.isNew;
+    
     if (!isNew) {
       requestGetUtente().then((expositorMapperData) {
+        visibilityStore.setSelected(false);
         expoisitorMapper = expositorMapperData;
         if (expositorMapperData != null) {
           if (expositorMapperData.ragionesociale != null) {
@@ -117,6 +121,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
       selectedValueProvince = "Rimini";
       selectedItemyStoreNation.setSelectedItem(selectedValue);
       selectedItemyStoreProvince.setSelectedItem(selectedValueProvince);
+       visibilityStore.setSelected(false);
     }
 
     super.initState();
@@ -143,323 +148,332 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
               backgroundColor:
                   themeChange.darkTheme ? Colors.black : Colors.white,
             ),
-            body: Container(
-                padding: EdgeInsets.all(8),
-                child: SingleChildScrollView(
-                    child: Column(
-                  children: [
-                    SizedBox(
-                      height: 14,
-                    ),
-                    textFieldForm(
-                        textEditingControllerSocialRegion,
-                        AppLocalizations.of(context).socialRegion,
-                        1,
-                        themeChange.darkTheme ? Colors.white : Colors.black),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    textFieldForm(
-                        textEditingControllerSurname,
-                        AppLocalizations.of(context).surname,
-                        1,
-                        themeChange.darkTheme ? Colors.white : Colors.black),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    textFieldForm(
-                        textEditingControllerName,
-                        AppLocalizations.of(context).name,
-                        1,
-                        themeChange.darkTheme ? Colors.white : Colors.black),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    textFieldForm(
-                        textEditingControllerEmail,
-                        AppLocalizations.of(context).email,
-                        1,
-                        themeChange.darkTheme ? Colors.white : Colors.black),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    textFieldForm(
-                        textEditingControllerPhone,
-                        AppLocalizations.of(context).telephone,
-                        1,
-                        themeChange.darkTheme ? Colors.white : Colors.black),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    textFieldForm(
-                        textEditingControllerCap,
-                        AppLocalizations.of(context).cap,
-                        1,
-                        themeChange.darkTheme ? Colors.white : Colors.black),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Color.fromARGB(109, 146, 196, 165),
+            body: Observer(
+              builder: (context) {
+                if(!visibilityStore.isVisible){
+                return Container(
+                    padding: EdgeInsets.all(8),
+                    child: SingleChildScrollView(
+                        child: Column(
+                      children: [
+                        SizedBox(
+                          height: 14,
                         ),
-                        padding: EdgeInsets.all(4),
-                        child: Column(
-                          children: [
-                            Align(
-                              child: Text(
-                                AppLocalizations.of(context)
-                                    .expositorLocalizationData,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: CupertinoColors.systemGrey),
-                              ),
-                              alignment: Alignment.topLeft,
+                        textFieldForm(
+                            textEditingControllerSocialRegion,
+                            AppLocalizations.of(context).socialRegion,
+                            1,
+                            themeChange.darkTheme ? Colors.white : Colors.black),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        textFieldForm(
+                            textEditingControllerSurname,
+                            AppLocalizations.of(context).surname,
+                            1,
+                            themeChange.darkTheme ? Colors.white : Colors.black),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        textFieldForm(
+                            textEditingControllerName,
+                            AppLocalizations.of(context).name,
+                            1,
+                            themeChange.darkTheme ? Colors.white : Colors.black),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        textFieldForm(
+                            textEditingControllerEmail,
+                            AppLocalizations.of(context).email,
+                            1,
+                            themeChange.darkTheme ? Colors.white : Colors.black),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        textFieldForm(
+                            textEditingControllerPhone,
+                            AppLocalizations.of(context).telephone,
+                            1,
+                            themeChange.darkTheme ? Colors.white : Colors.black),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        textFieldForm(
+                            textEditingControllerCap,
+                            AppLocalizations.of(context).cap,
+                            1,
+                            themeChange.darkTheme ? Colors.white : Colors.black),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color.fromARGB(109, 146, 196, 165),
                             ),
-                            Column(
+                            padding: EdgeInsets.all(4),
+                            child: Column(
                               children: [
-                                GestureDetector(
-                                    onTap: () => showPickerNation(),
-                                    child: Container(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 20,
-                                            top: 12,
-                                            bottom: 12,
-                                            right: 20),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)
-                                                  .nation,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: CupertinoColors
-                                                      .systemGrey),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Observer(
-                                                builder: ((context) => Text(
-                                                    selectedItemyStoreNation
-                                                        .selectedItem!))),
-                                            Spacer(),
-                                            Icon(
-                                              CupertinoIcons.chevron_down,
-                                              //color: ThemeHelper.primaryColor,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                                GestureDetector(
-                                    onTap: () => showPickerProvince(),
-                                    child: Container(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 20,
-                                            top: 12,
-                                            bottom: 12,
-                                            right: 20),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)
-                                                  .province,
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: CupertinoColors
-                                                      .systemGrey),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Observer(
-                                                builder: ((context) => Text(
-                                                    selectedItemyStoreProvince
-                                                        .selectedItem!))),
-                                            Spacer(),
-                                            Icon(
-                                              CupertinoIcons.chevron_down,
-                                              //color: ThemeHelper.primaryColor,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                              ],
-                            )
-                          ],
-                        )),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    textFieldForm(
-                        textEditingControllerNote,
-                        AppLocalizations.of(context).notes,
-                        5,
-                        themeChange.darkTheme ? Colors.white : Colors.black),
-                    SizedBox(
-                      height: 14,
-                    ),
-                    Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context).takePicture,
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  color: CupertinoColors.systemGrey),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: TakePictureWidget(
-                                    onTakedPicture: (value) =>
-                                        base64Photo1 = value,
+                                Align(
+                                  child: Text(
+                                    AppLocalizations.of(context)
+                                        .expositorLocalizationData,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: CupertinoColors.systemGrey),
                                   ),
+                                  alignment: Alignment.topLeft,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: TakePictureWidget(
-                                    onTakedPicture: (value) =>
-                                        base64Photo2 = value,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: TakePictureWidget(
-                                    onTakedPicture: (value) =>
-                                        base64Photo3 = value,
-                                  ),
+                                Column(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () => showPickerNation(),
+                                        child: Container(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 20,
+                                                top: 12,
+                                                bottom: 12,
+                                                right: 20),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)
+                                                      .nation,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: CupertinoColors
+                                                          .systemGrey),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Observer(
+                                                    builder: ((context) => Text(
+                                                        selectedItemyStoreNation
+                                                            .selectedItem!))),
+                                                Spacer(),
+                                                Icon(
+                                                  CupertinoIcons.chevron_down,
+                                                  //color: ThemeHelper.primaryColor,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )),
+                                    GestureDetector(
+                                        onTap: () => showPickerProvince(),
+                                        child: Container(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 20,
+                                                top: 12,
+                                                bottom: 12,
+                                                right: 20),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)
+                                                      .province,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: CupertinoColors
+                                                          .systemGrey),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Observer(
+                                                    builder: ((context) => Text(
+                                                        selectedItemyStoreProvince
+                                                            .selectedItem!))),
+                                                Spacer(),
+                                                Icon(
+                                                  CupertinoIcons.chevron_down,
+                                                  //color: ThemeHelper.primaryColor,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )),
+                                  ],
                                 )
                               ],
-                            )
-                          ],
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              AppLocalizations.of(context).doValutation,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: CupertinoColors.systemGrey),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Center(
-                            child: RatingBar.builder(
-                              initialRating: 1,
-                              minRating: 1,
-                              itemSize: 38,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              unratedColor: themeChange.darkTheme
-                                  ? Colors.white
-                                  : Colors.black,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 4.0),
-                              itemBuilder: (context, _) => Icon(
-                                CupertinoIcons.star_fill,
-                                color: Colors.green,
+                            )),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        textFieldForm(
+                            textEditingControllerNote,
+                            AppLocalizations.of(context).notes,
+                            5,
+                            themeChange.darkTheme ? Colors.white : Colors.black),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context).takePicture,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      color: CupertinoColors.systemGrey),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: TakePictureWidget(
+                                        onTakedPicture: (value) =>
+                                            base64Photo1 = value,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: TakePictureWidget(
+                                        onTakedPicture: (value) =>
+                                            base64Photo2 = value,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: TakePictureWidget(
+                                        onTakedPicture: (value) =>
+                                            base64Photo3 = value,
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  AppLocalizations.of(context).doValutation,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: CupertinoColors.systemGrey),
+                                ),
                               ),
-                              onRatingUpdate: (rating) {
-                                print(rating);
-                                star = rating.round();
-                              },
-                            ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: RatingBar.builder(
+                                  initialRating: 1,
+                                  minRating: 1,
+                                  itemSize: 38,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  unratedColor: themeChange.darkTheme
+                                      ? Colors.white
+                                      : Colors.black,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    CupertinoIcons.star_fill,
+                                    color: Colors.green,
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                    print(rating);
+                                    star = rating.round();
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Container(
-                      // ignore: sort_child_properties_last
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18)),
-                        color: Colors.green,
-                        textColor: Colors.white,
-                        height: 46,
-                        minWidth: MediaQuery.of(context).size.width,
-                        onPressed: () {
-                          setUtenteApp(
-                                  isNew,
-                                  user.id.toString(),
-                                  user.manifestationId.toString(),
-                                  codice20.toString(),
-                                  textEditingControllerNote.text,
-                                  textEditingControllerCap.text,
-                                  textEditingControllerEmail.text,
-                                  NationsUtils.getInitialsFromNation(
-                                      selectedValue),
-                                  ProvinceUtils.getInitialsFromProvince(
-                                      selectedValueProvince),
-                                  textEditingControllerName.text,
-                                  textEditingControllerSurname.text,
-                                  textEditingControllerPhone.text,
-                                  textEditingControllerSocialRegion.text,
-                                  expoisitorMapper != null ? expoisitorMapper!.idextra : null,
-                                  envirormentProvider.envirormentState)
-                              .then((value) => {
-                                    if (value != 0)
-                                      {
-                                        Navigator.pop(context),
-                                        Fluttertoast.showToast(
-                                            msg: AppLocalizations.of(context)
-                                                .contentToastSetUtenteOk,
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor:
-                                                CupertinoColors.black,
-                                            textColor: CupertinoColors.white,
-                                            fontSize: 16.0),
-                                      }
-                                    else
-                                      {
-                                        Fluttertoast.showToast(
-                                            msg: AppLocalizations.of(context)
-                                                .contentToastSetUtenteko,
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor:
-                                                CupertinoColors.black,
-                                            textColor: CupertinoColors.white,
-                                            fontSize: 16.0),
-                                      }
-                                  });
-                        },
-                        child: Text(AppLocalizations.of(context).saveExpositor),
-                      ),
-                      padding: EdgeInsets.all(8),
-                    ),
-                    SizedBox(
-                      height: 100,
-                    )
-                  ],
-                )))));
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Container(
+                          // ignore: sort_child_properties_last
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18)),
+                            color: Colors.green,
+                            textColor: Colors.white,
+                            height: 46,
+                            minWidth: MediaQuery.of(context).size.width,
+                            onPressed: () {
+                              setUtenteApp(
+                                      isNew,
+                                      user.id.toString(),
+                                      user.manifestationId.toString(),
+                                      codice20.toString(),
+                                      textEditingControllerNote.text,
+                                      textEditingControllerCap.text,
+                                      textEditingControllerEmail.text,
+                                      NationsUtils.getInitialsFromNation(
+                                          selectedValue),
+                                      ProvinceUtils.getInitialsFromProvince(
+                                          selectedValueProvince),
+                                      textEditingControllerName.text,
+                                      textEditingControllerSurname.text,
+                                      textEditingControllerPhone.text,
+                                      textEditingControllerSocialRegion.text,
+                                      expoisitorMapper != null ? expoisitorMapper!.idextra : null,
+                                      envirormentProvider.envirormentState)
+                                  .then((value) => {
+                                        if (value != 0)
+                                          {
+                                            Navigator.pop(context),
+                                            Fluttertoast.showToast(
+                                                msg: AppLocalizations.of(context)
+                                                    .contentToastSetUtenteOk,
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor:
+                                                    CupertinoColors.black,
+                                                textColor: CupertinoColors.white,
+                                                fontSize: 16.0),
+                                          }
+                                        else
+                                          {
+                                            Fluttertoast.showToast(
+                                                msg: AppLocalizations.of(context)
+                                                    .contentToastSetUtenteko,
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor:
+                                                    CupertinoColors.black,
+                                                textColor: CupertinoColors.white,
+                                                fontSize: 16.0),
+                                          }
+                                      });
+                            },
+                            child: Text(AppLocalizations.of(context).saveExpositor),
+                          ),
+                          padding: EdgeInsets.all(8),
+                        ),
+                        SizedBox(
+                          height: 100,
+                        )
+                      ],
+                    )));
+                }else{
+                  return Center(child: CircularProgressIndicator());
+                }
+              }
+              
+            )));
   }
 
   Future showDismissDialogForFuture() async {
@@ -574,9 +588,11 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
       String ragioneSociale,
       String? idExtra,
       Envirorment envirorment){
+    
     if(isNew){
       return requestSetUtenteAppManual(expositorId, manifestationId, note, cap, email, siglaNatzione, siglaProvincia, nome, cognome, telefono, ragioneSociale, envirorment);
     }else{
+      idExtra ??= "";
       return requestSetUtenteApp(expositorId, manifestationId, codice20, note, cap, email, siglaNatzione, siglaProvincia, nome, cognome, telefono, ragioneSociale, idExtra!, envirorment);
     }
   }
