@@ -22,8 +22,8 @@ class BezierContainer extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                Color.fromARGB(255, 72, 251, 96),
-                Color.fromARGB(255, 4, 167, 58)
+                Color.fromARGB(255, 245, 220, 1),
+                Color.fromARGB(255, 167, 83, 4)
               ])),
         ),
       ),

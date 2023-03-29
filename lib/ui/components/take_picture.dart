@@ -29,7 +29,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> {
                 child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.green,
+                          color: Colors.orange,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: Padding(

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class ThemeHelper {
   static Color background = Color(0xffF3F5F9);
   static Color backgroundDark = Color(0xff1F1F1F);
-  static Color primaryColor = Color.fromARGB(255, 0, 194, 103);
+  static Color primaryColor = Color.fromARGB(255, 255, 191, 15);
 
   static ThemeData myThemeData(bool isDarkTheme, BuildContext buildContext) {
     return ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.orange,
         fontFamily: 'Poppins',
         primaryColor: primaryColor,
         textTheme: myTextTheme(isDarkTheme, buildContext),

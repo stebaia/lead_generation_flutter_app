@@ -136,7 +136,7 @@ class LoginScreen extends StatelessWidget {
                 fontSize: 30, fontWeight: FontWeight.w700, color: PrimaryColor),
             children: [
               TextSpan(
-                text: 'Ticket',
+                text: 'Lead',
                 style: TextStyle(
                     color: themeChange.darkTheme
                         ? CupertinoColors.white
@@ -145,7 +145,7 @@ class LoginScreen extends StatelessWidget {
                     fontFamily: 'Poppins'),
               ),
               TextSpan(
-                text: 'Manager',
+                text: 'Generation',
                 style: TextStyle(
                     color: PrimaryColor, fontSize: 30, fontFamily: 'Poppins'),
               ),
