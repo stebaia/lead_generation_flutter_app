@@ -146,12 +146,20 @@ class InitQrScreen extends StatelessWidget {
                 color: themeChange.darkTheme ? Colors.white : Colors.black),
             textAlign: TextAlign.center,
           ),
-          Padding(
-            padding: EdgeInsets.all(30),
-            child: Image.asset(
-              'assets/qrcode.png',
+          Container(
+            margin: EdgeInsets.all(30),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(20)),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(0),
+                child: Image.asset(
+                  'assets/qrcode.png',
+                ),
+              ),
             ),
           ),
+
           /*Row(
                   
                     crossAxisAlignment: CrossAxisAlignment.center,
