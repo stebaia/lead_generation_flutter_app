@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:lead_generation_flutter_app/model/expositor_mapper/expositor_mapper.dart';
@@ -132,6 +133,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return WillPopScope(
         onWillPop: () async {
+          SVProgressHUD.dismiss();
           await showDismissDialogForFuture();
           return shouldClose;
         },
@@ -424,6 +426,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                             height: 46,
                             minWidth: MediaQuery.of(context).size.width,
                             onPressed: () {
+                              SVProgressHUD.show();
                               setUtenteApp(
                                       isNew,
                                       user.id.toString(),
@@ -447,6 +450,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                   .then((value) => {
                                         if (value != 0)
                                           {
+                                            SVProgressHUD.dismiss(),
                                             Navigator.pop(context),
                                             Fluttertoast.showToast(
                                                 msg: AppLocalizations.of(
@@ -463,6 +467,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                           }
                                         else
                                           {
+                                            SVProgressHUD.dismiss(),
                                             Fluttertoast.showToast(
                                                 msg: AppLocalizations.of(
                                                         context)
@@ -471,12 +476,25 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                                 gravity: ToastGravity.BOTTOM,
                                                 timeInSecForIosWeb: 1,
                                                 backgroundColor:
-                                                    CupertinoColors.black,
+                                                    CupertinoColors.systemRed,
                                                 textColor:
                                                     CupertinoColors.white,
                                                 fontSize: 16.0),
                                           }
-                                      });
+                                      })
+                                  .onError((error, stackTrace) {
+                                SVProgressHUD.dismiss();
+                                Fluttertoast.showToast(
+                                    msg: AppLocalizations.of(context)
+                                        .contentToastSetUtenteko,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: CupertinoColors.systemRed,
+                                    textColor: CupertinoColors.white,
+                                    fontSize: 16.0);
+                                return Future.value();
+                              });
                             },
                             child: Text(
                                 AppLocalizations.of(context).saveExpositor),
