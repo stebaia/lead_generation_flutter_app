@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:external_path/external_path.dart';
 import 'package:csv/csv.dart';
@@ -51,10 +52,10 @@ class CsvExporter {
 
     String csv = const ListToCsvConverter().convert(rows);
 
+    if(Platform.isAndroid){
     String dir = await ExternalPath.getExternalStoragePublicDirectory(
         ExternalPath.DIRECTORY_DOWNLOADS);
-
-    print("dir $dir");
+        print("dir $dir");
     String file = "$dir";
 
     File f = File(file + "/esportazione_espositori.csv");
@@ -62,5 +63,16 @@ class CsvExporter {
     f.writeAsString(csv);
 
     shareFile(f.path);
-  }
+    }Directory documents = await getApplicationDocumentsDirectory();
+        
+    String file = documents.path;
+
+    File f = File(file + "/esportazione_offline_scan.csv");
+
+    f.writeAsString(csv);
+
+    shareFile(f.path);
+    }
+    
+  
 }

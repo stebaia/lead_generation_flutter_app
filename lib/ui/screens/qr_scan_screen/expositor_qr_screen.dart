@@ -104,16 +104,31 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                 },
               ),
               backgroundColor: Colors.black,
-              title: Text(
-                widget.user.courseName != null
-                    ? widget.user.courseName!.length > 60
-                        ? widget.user.courseName!
-                                .substring(0, 60)
-                                .capitalize() +
-                            ".."
-                        : widget.user.courseName!.capitalize()
-                    : AppLocalizations.of(context).scanQrCode,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+              title: Column(
+                children: [
+                  Text(
+                    widget.user.manifestationName != null
+                        ? widget.user.manifestationName!.length > 60
+                            ? widget.user.manifestationName!
+                                    .substring(0, 60)
+                                    .capitalize() +
+                                ".."
+                            : widget.user.manifestationName!.capitalize()
+                        : AppLocalizations.of(context).scanQrCode,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  Text(
+                    widget.user.courseName != null
+                        ? widget.user.courseName!.length > 60
+                            ? widget.user.courseName!
+                                    .substring(0, 60)
+                                    .capitalize() +
+                                ".."
+                            : widget.user.courseName!.capitalize()
+                        : AppLocalizations.of(context).scanQrCode,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ],
               ),
             ),
             body: Stack(

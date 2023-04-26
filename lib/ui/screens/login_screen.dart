@@ -20,16 +20,21 @@ import '../../model/user_model/user.dart';
 import '../../store/form_store/form_store.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
-  FormStore formStore = FormStore();
-  TextEditingController textEditingControllerEmail = TextEditingController();
-  TextEditingController textEditingControllerPassword = TextEditingController();
+
   @override
-  Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
-    final envirormentTheme = Provider.of<EnvirormentProvider>(context);
-    Widget _entryField(String title, TextEditingController controller,
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  FormStore formStore = FormStore();
+
+  TextEditingController textEditingControllerEmail = TextEditingController();
+
+  TextEditingController textEditingControllerPassword = TextEditingController();
+
+  Widget _entryField(String title, TextEditingController controller, bool darkTheme,
         {bool isPassword = false}) {
       return Container(
         margin: EdgeInsets.symmetric(vertical: 10),
@@ -41,7 +46,7 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
-                color: themeChange.darkTheme
+                color: darkTheme
                     ? Color(0xfff3f3f4)
                     : Color.fromARGB(255, 1, 1, 20),
               ),
@@ -53,7 +58,7 @@ class LoginScreen extends StatelessWidget {
               Observer(
                   builder: ((context) => TextField(
                       style: TextStyle(
-                        color: themeChange.darkTheme
+                        color: darkTheme
                             ? Color(0xfff3f3f4)
                             : Color.fromARGB(255, 1, 1, 20),
                       ),
@@ -65,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                               formStore.isVisibile
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: themeChange.darkTheme
+                              color: darkTheme
                                   ? Color(0xfff3f3f4)
                                   : Color.fromARGB(255, 1, 1, 20),
                             ),
@@ -73,7 +78,7 @@ class LoginScreen extends StatelessWidget {
                                 formStore.setVisibility(!formStore.isVisibile),
                           ),
                           border: InputBorder.none,
-                          fillColor: themeChange.darkTheme
+                          fillColor: darkTheme
                               ? Color.fromARGB(255, 1, 1, 20)
                               : Color(0xfff3f3f4),
                           filled: true))))
@@ -83,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                       controller: controller,
                       decoration: InputDecoration(
                           border: InputBorder.none,
-                          fillColor: themeChange.darkTheme
+                          fillColor: darkTheme
                               ? Color.fromARGB(255, 1, 1, 20)
                               : Color(0xfff3f3f4),
                           filled: true))))
@@ -103,7 +108,7 @@ class LoginScreen extends StatelessWidget {
         switch (user.userType) {
           case 107:
             Navigator.pushAndRemoveUntil(
-              context,
+              buildContext,
               MaterialPageRoute(
                   builder: (BuildContext context) => HomePageScreen(
                         user: user,
@@ -113,7 +118,7 @@ class LoginScreen extends StatelessWidget {
             break;
           default:
             Navigator.pushAndRemoveUntil(
-              context,
+              buildContext,
               MaterialPageRoute(
                   builder: (BuildContext context) => ChooseScreen(
                         user: user,
@@ -123,6 +128,7 @@ class LoginScreen extends StatelessWidget {
             break;
         }
       }).onError((error, stackTrace) {
+        SVProgressHUD.dismiss();
         Fluttertoast.showToast(
             msg: 'Credenziali non valide',
             textColor: Colors.white,
@@ -130,7 +136,7 @@ class LoginScreen extends StatelessWidget {
       });
     }
 
-    Widget _title() {
+    Widget _title(bool darkTheme) {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -140,7 +146,7 @@ class LoginScreen extends StatelessWidget {
               TextSpan(
                 text: 'Lead',
                 style: TextStyle(
-                    color: themeChange.darkTheme
+                    color: darkTheme
                         ? CupertinoColors.white
                         : CupertinoColors.label,
                     fontSize: 30,
@@ -155,6 +161,10 @@ class LoginScreen extends StatelessWidget {
       );
     }
 
+  @override
+  Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
+    final envirormentTheme = Provider.of<EnvirormentProvider>(context);
     return Scaffold(
         backgroundColor:
             themeChange.darkTheme ? ThemeHelper.backgroundDark : Colors.white,
@@ -171,9 +181,9 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _title(),
-                  _entryField('Email', textEditingControllerEmail),
-                  _entryField('Password', textEditingControllerPassword,
+                  _title(themeChange.darkTheme),
+                  _entryField('Email', textEditingControllerEmail, themeChange.darkTheme),
+                  _entryField('Password', textEditingControllerPassword, themeChange.darkTheme,
                       isPassword: true),
                   Align(
                     alignment: Alignment.centerRight,

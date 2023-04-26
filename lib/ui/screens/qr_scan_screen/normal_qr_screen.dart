@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:lead_generation_flutter_app/model/check_manager_model/check_model.dart';
@@ -106,16 +107,31 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                   tabs: tabBarWidget(),
                   indicatorWeight: 6,
                   indicatorColor: ThemeHelper.primaryColor),
-              title: Text(
-                widget.user.courseName != null
-                    ? widget.user.courseName!.length > 60
-                        ? widget.user.courseName!
-                                .substring(0, 60)
-                                .capitalize() +
-                            ".."
-                        : widget.user.courseName!.capitalize()
-                    : AppLocalizations.of(context).scanQrCode,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+              title: Column(
+                children: [
+                  Text(
+                    widget.user.manifestationName != null
+                        ? widget.user.manifestationName!.length > 60
+                            ? widget.user.manifestationName!
+                                    .substring(0, 60)
+                                    .capitalize() +
+                                ".."
+                            : widget.user.manifestationName!.capitalize()
+                        : AppLocalizations.of(context).scanQrCode,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  Text(
+                    widget.user.courseName != null
+                        ? widget.user.courseName!.length > 50
+                            ? widget.user.courseName!
+                                    .substring(0, 50)
+                                    .capitalize() +
+                                ".."
+                            : widget.user.courseName!
+                        : AppLocalizations.of(context).scanQrCode,
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ],
               ),
             ),
             body: Stack(
@@ -130,8 +146,11 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                         debugPrint('Failed to scan Barcode');
                       } else {
                         final String code = barcode.rawValue!;
+                        if(visibilityStore.isVisible){
+                        SVProgressHUD.show();
                         if (widget.user.courseName != null) {
                           if (codiceScan != barcode.rawValue) {
+                            
                             visibilityStore.setSelected(false);
                             codiceScan = barcode.rawValue!;
                             lastBarcode = barcode.rawValue!;
@@ -167,6 +186,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
 
                             debugPrint('Barcode found! $code');
                           }
+
                         } else {
                           if (codiceScan != barcode.rawValue) {
                             visibilityStore.setSelected(false);
@@ -205,6 +225,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                             debugPrint('Barcode found! $code');
                           }
                         }
+                      }
                       }
                     }),
                 Observer(
@@ -287,9 +308,10 @@ class _NormalQrScreenState extends State<NormalQrScreen>
   }
 
   Widget getLayerScan() {
+    SVProgressHUD.dismiss();
     if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
         int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
-      SoundHelper.play(3, player);
+      SoundHelper.play(1, player);
       return GestureDetector(
         child: Container(
             height: double.infinity,

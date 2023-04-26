@@ -35,202 +35,207 @@ class InitQrScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    return Center(
-        child: Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
-      alignment: Alignment.center,
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(30))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: ThemeHelper.primaryColor,
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.manifestationName!.capitalize(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                      user.courseName != null
-                          ? Container(
-                              width: 250,
-                              child: Text(
-                                user.courseName!.length > 60
-                                    ? user.courseName!
-                                            .substring(0, 60)
-                                            .capitalize() +
-                                        ".."
-                                    : user.courseName!.capitalize(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                            )
-                          : Container(),
-                      user.courseName != null
-                          ? FutureBuilder(
-                              future: getVisitors(),
-                              builder: ((context, snapshot) {
-                                if (snapshot.hasData) {
-                                  visitors = snapshot.data as int;
-                                  return Text(
-                                    "$visitors " +
-                                        AppLocalizations.of(context)
-                                            .currentPeople,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              }))
-                          : Container()
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: (() {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => ChooseScreen(
-                                  user: user,
-                                )),
-                        ModalRoute.withName('/choose'),
-                      );
-                    }),
-                    child: Container(
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Icon(
-                          Icons.change_circle,
-                          color: Colors.white,
+    return SingleChildScrollView(
+      child: Center(
+          child: Container(
+        margin: EdgeInsets.only(left: 20, right: 20, top: 30),
+        alignment: Alignment.center,
+        decoration:
+            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(30))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: ThemeHelper.primaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 250,
+                          child: Text(
+                            user.manifestationName!.capitalize(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
                         ),
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                        user.courseName != null
+                            ? Container(
+                                width: 250,
+                                child: Text(
+                                  user.courseName!.length > 60
+                                      ? user.courseName!
+                                              .substring(0, 60)
+                                              .capitalize() +
+                                          ".."
+                                      : user.courseName!.capitalize(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              )
+                            : Container(),
+                        user.courseName != null
+                            ? FutureBuilder(
+                                future: getVisitors(),
+                                builder: ((context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    visitors = snapshot.data as int;
+                                    return Text(
+                                      "$visitors " +
+                                          AppLocalizations.of(context)
+                                              .currentPeople,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }))
+                            : Container()
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Text(
-            AppLocalizations.of(context).scanQrCode,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: themeChange.darkTheme ? Colors.white : Colors.black),
-          ),
-          Text(
-            AppLocalizations.of(context).tap_the_button,
-            style: TextStyle(
-                color: themeChange.darkTheme ? Colors.white : Colors.black),
-            textAlign: TextAlign.center,
-          ),
-          Container(
-            margin: EdgeInsets.all(30),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(0),
-                child: Image.asset(
-                  'assets/qrcode.png',
+                    GestureDetector(
+                      onTap: (() {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => ChooseScreen(
+                                    user: user,
+                                  )),
+                          ModalRoute.withName('/choose'),
+                        );
+                      }),
+                      child: Container(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Icon(
+                            Icons.change_circle,
+                            color: Colors.white,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
-          ),
-
-          /*Row(
-                  
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Icon(
-                          Icons.ads_click,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Icon(
-                          Icons.flash_on,
-                          color: Colors.grey,
-                        ),
-                      )
-                    ],
-                  ),*/
-          SizedBox(
-            height: 30,
-          ),
-          Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              height: 60,
-              width: double.infinity,
-              child: TextButton(
-                  onPressed: (() {
-                    switch (user.userType) {
-                      case 106:
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  ExpositorQrScreen(
-                                    user: user,
-                                  )),
-                        );
-                        break;
-
-                      default:
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => NormalQrScreen(
-                                    user: user,
-                                  )),
-                        );
-                        break;
-                    }
-                    /*if (user!.isAutorizzazione == 0) {
-                              context.pushRoute(QrViewRoute(user: user!));
-                            } else {
-                              context.pushRoute(
-                                  AutorizationQrViewRoute(user: user!));
-                            }*/
-                  }),
-                  style: TextButton.styleFrom(
-                    primary: Colors.white,
-                    backgroundColor: PrimaryColor,
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              AppLocalizations.of(context).scanQrCode,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: themeChange.darkTheme ? Colors.white : Colors.black),
+            ),
+            Text(
+              AppLocalizations.of(context).tap_the_button,
+              style: TextStyle(
+                  color: themeChange.darkTheme ? Colors.white : Colors.black),
+              textAlign: TextAlign.center,
+            ),
+            Container(
+              margin: EdgeInsets.all(30),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(0),
+                  child: Image.asset(
+                    'assets/qrcode.png',
                   ),
-                  child: Text(
-                    AppLocalizations.of(context).scan_exclamative,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+    
+            /*Row(
+                    
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(
+                            Icons.ads_click,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(
+                            Icons.flash_on,
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
+                    ),*/
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                height: 60,
+                width: double.infinity,
+                child: TextButton(
+                    onPressed: (() {
+                      switch (user.userType) {
+                        case 106:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    ExpositorQrScreen(
+                                      user: user,
+                                    )),
+                          );
+                          break;
+    
+                        default:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => NormalQrScreen(
+                                      user: user,
+                                    )),
+                          );
+                          break;
+                      }
+                      /*if (user!.isAutorizzazione == 0) {
+                                context.pushRoute(QrViewRoute(user: user!));
+                              } else {
+                                context.pushRoute(
+                                    AutorizationQrViewRoute(user: user!));
+                              }*/
+                    }),
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: PrimaryColor,
                     ),
-                  ))),
-        ],
-      ),
-    ));
+                    child: Text(
+                      AppLocalizations.of(context).scan_exclamative,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ))),
+          ],
+        ),
+      )),
+    );
   }
 }

@@ -56,7 +56,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
   SelectedItemyStore selectedItemyStoreNation = SelectedItemyStore();
   SelectedItemyStore selectedItemyStoreProvince = SelectedItemyStore();
   VisibilityStore visibilityStore = VisibilityStore();
-  int star = 0;
+  double star = 1;
   String selectedValue = "";
   String selectedValueProvince = "";
   String base64Photo1 = "";
@@ -112,7 +112,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                     expositorMapperData.siglaprovincia!)
                 .name;
           }
-
+          if(expositorMapperData.valore != null){
+            star = double.parse(expositorMapperData.valore!);
+          }
           selectedItemyStoreNation.setSelectedItem(selectedValue);
           selectedItemyStoreProvince.setSelectedItem(selectedValueProvince);
         }
@@ -327,7 +329,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         SizedBox(
                           height: 14,
                         ),
-                        Padding(
+                        /*Padding(
                             padding: EdgeInsets.all(8),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -370,7 +372,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                   ],
                                 )
                               ],
-                            )),
+                            )),*/
                         Container(
                           padding: EdgeInsets.all(8),
                           child: Column(
@@ -389,11 +391,11 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                               ),
                               Center(
                                 child: RatingBar.builder(
-                                  initialRating: 1,
+                                  initialRating: star,
                                   minRating: 1,
                                   itemSize: 38,
                                   direction: Axis.horizontal,
-                                  allowHalfRating: true,
+                                  allowHalfRating: false,
                                   itemCount: 5,
                                   unratedColor: themeChange.darkTheme
                                       ? Colors.white
@@ -406,7 +408,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                   ),
                                   onRatingUpdate: (rating) {
                                     print(rating);
-                                    star = rating.round();
+                                    star = rating;
                                   },
                                 ),
                               ),
@@ -641,7 +643,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
           ragioneSociale,
           envirorment);
     } else {
-      idExtra ??= "";
+      idExtra ??= "0";
       return requestSetUtenteApp(
           expositorId,
           manifestationId,
@@ -677,7 +679,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
     Future<int> setUser = setUtenteService.setUtenteAppManual(
         idUtilizzatore,
         manifestationId,
-        (star + 1).toString(),
+        star.toStringAsFixed(0),
         base64Photo1,
         base64Photo2,
         base64Photo3,
@@ -715,7 +717,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
         expositorId,
         manifestationId,
         codice20,
-        (star + 1).toString(),
+        star.toStringAsFixed(0),
         base64Photo1,
         base64Photo2,
         base64Photo3,
