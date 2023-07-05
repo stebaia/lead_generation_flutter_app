@@ -2,7 +2,7 @@ import 'package:mobx/mobx.dart';
 import 'package:lead_generation_flutter_app/network/scan_manager_service.dart';
 
 import '../../model/check_manager_model/check_model.dart';
-import '../../utils/envirorment.dart';
+import '../../utils_backup/envirorment.dart';
 
 part 'normalScan_store.g.dart';
 

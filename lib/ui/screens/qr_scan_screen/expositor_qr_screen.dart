@@ -20,17 +20,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
-import 'package:lead_generation_flutter_app/utils/envirorment.dart';
-import 'package:lead_generation_flutter_app/utils/extension.dart';
-import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
-import 'package:lead_generation_flutter_app/utils/sound_play.dart';
-import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';
+import 'package:lead_generation_flutter_app/utils_backup/extension.dart';
+import 'package:lead_generation_flutter_app/utils_backup/sound_helper.dart';
+import 'package:lead_generation_flutter_app/utils_backup/sound_play.dart';
+import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 
 import '../../../model/user_model/user.dart';
 import '../../../network/visitors_service.dart';
 import '../../../provider/dark_theme_provider.dart';
 import '../../../provider/envirorment_provider.dart';
-import '../../../utils/scanner_animations.dart';
+import '../../../utils_backup/scanner_animations.dart';
 
 class ExpositorQrScreen extends StatefulWidget {
   ExpositorQrScreen({Key? key, required this.user}) : super(key: key);
@@ -147,18 +147,17 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           codiceScan = barcode.rawValue!;
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
-                          
-                            Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: ((context) =>
-                                        ExpositorDetailScreen(
-                                          user: widget.user,
-                                          isNew: false,
-                                          codice20: codiceScan,
-                                        ))));
-                          
+
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => ExpositorDetailScreen(
+                                        user: widget.user,
+                                        isNew: false,
+                                        codice20: codiceScan,
+                                      ))));
+
                           //visibilityStore.setSelected(false);
 
                           //cameraController.stop();
@@ -269,7 +268,6 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                     children: [
                       CheckboxListTile(
                           side: BorderSide(color: anotherColor),
-                          
                           title: Text(
                             "Acconsenti al trattamento della privacy",
                             style: TextStyle(fontSize: 12),

@@ -10,12 +10,12 @@ import 'package:lead_generation_flutter_app/provider/envirorment_provider.dart';
 import 'package:lead_generation_flutter_app/ui/screens/choose_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/qr_scan_screen/expositor_qr_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/qr_scan_screen/normal_qr_screen.dart';
-import 'package:lead_generation_flutter_app/utils/custom_colors.dart';
-import 'package:lead_generation_flutter_app/utils/extension.dart';
+import 'package:lead_generation_flutter_app/utils_backup/custom_colors.dart';
+import 'package:lead_generation_flutter_app/utils_backup/extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../store/dropdown_store/dropdown_store.dart';
-import '../../utils/theme/custom_theme.dart';
+import '../../utils_backup/theme/custom_theme.dart';
 
 class InitQrScreen extends StatelessWidget {
   InitQrScreen({Key? key, required this.user}) : super(key: key);
@@ -65,7 +65,8 @@ class InitQrScreen extends StatelessWidget {
                           child: Text(
                             user.manifestationName!.capitalize(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                         ),
                         user.courseName != null
@@ -127,7 +128,8 @@ class InitQrScreen extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
                       ),
                     )
                   ],
@@ -163,7 +165,7 @@ class InitQrScreen extends StatelessWidget {
                 ),
               ),
             ),
-    
+
             /*Row(
                     
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -205,12 +207,13 @@ class InitQrScreen extends StatelessWidget {
                                     )),
                           );
                           break;
-    
+
                         default:
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) => NormalQrScreen(
+                                builder: (BuildContext context) =>
+                                    NormalQrScreen(
                                       user: user,
                                     )),
                           );

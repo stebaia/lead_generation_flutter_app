@@ -6,11 +6,14 @@ import 'package:external_path/external_path.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter_share/flutter_share.dart';
 import '../model/expositor_mapper/expositor_mapper.dart';
-import 'package:share_plus/share_plus.dart';
 
 class CsvExporter {
   Future<void> shareFile(String path) async {
-    Share.shareFiles([path]);
+    await FlutterShare.shareFile(
+      title: 'Example share',
+      text: 'Example share text',
+      filePath: path,
+    );
   }
 
   void generateCsvFile(List<ExpoisitorMapper> expositors) async {
@@ -41,10 +44,9 @@ class CsvExporter {
       row.add(expositors[i].cap);
       row.add(expositors[i].siglaprovincia);
       row.add(expositors[i].siglanazione);
+      row.add(expositors[i].valore);
+      row.add(expositors[i].cognome);
       row.add(expositors[i].privacyCommerciale);
-      row.add(expositors[i].ragionesociale);
-      row.add(expositors[i].note);
-
       rows.add(row);
     }
 
@@ -61,16 +63,15 @@ class CsvExporter {
       f.writeAsString(csv);
 
       shareFile(f.path);
-    } else {
-      Directory documents = await getApplicationDocumentsDirectory();
-
-      String file = documents.path;
-
-      File f = File(file + "/esportazione_offline_scan.csv");
-
-      f.writeAsString(csv);
-
-      shareFile(f.path);
     }
+    Directory documents = await getApplicationDocumentsDirectory();
+
+    String file = documents.path;
+
+    File f = File(file + "/esportazione_offline_scan.csv");
+
+    f.writeAsString(csv);
+
+    shareFile(f.path);
   }
 }

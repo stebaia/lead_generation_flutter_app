@@ -9,7 +9,7 @@ import 'package:lead_generation_flutter_app/store/bottomNavigationBar_store/bott
 import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/initqr_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/settings_screen.dart';
-import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../provider/dark_theme_provider.dart';

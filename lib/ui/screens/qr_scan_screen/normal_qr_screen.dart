@@ -16,19 +16,18 @@ import 'package:lead_generation_flutter_app/store/visibility_store/visibility_st
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
-import 'package:lead_generation_flutter_app/utils/envirorment.dart';
-import 'package:lead_generation_flutter_app/utils/extension.dart';
-import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
-import 'package:lead_generation_flutter_app/utils/sound_play.dart';
-import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
-
+import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';
+import 'package:lead_generation_flutter_app/utils_backup/extension.dart';
+import 'package:lead_generation_flutter_app/utils_backup/sound_helper.dart';
+import 'package:lead_generation_flutter_app/utils_backup/sound_play.dart';
+import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 import '../../../db/database_helper.dart';
 import '../../../model/scan_offline.dart';
 import '../../../model/user_model/user.dart';
 import '../../../network/visitors_service.dart';
 import '../../../provider/envirorment_provider.dart';
 import '../../../provider/offline_mode_provider.dart';
-import '../../../utils/scanner_animations.dart';
+import '../../../utils_backup/scanner_animations.dart';
 
 class NormalQrScreen extends StatefulWidget {
   NormalQrScreen({Key? key, required this.user}) : super(key: key);
@@ -107,31 +106,35 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                   tabs: tabBarWidget(),
                   indicatorWeight: 6,
                   indicatorColor: ThemeHelper.primaryColor),
-              title: Column(
-                children: [
-                  Text(
-                    widget.user.manifestationName != null
-                        ? widget.user.manifestationName!.length > 60
-                            ? widget.user.manifestationName!
-                                    .substring(0, 60)
-                                    .capitalize() +
-                                ".."
-                            : widget.user.manifestationName!.capitalize()
-                        : AppLocalizations.of(context).scanQrCode,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                  Text(
-                    widget.user.courseName != null
-                        ? widget.user.courseName!.length > 50
-                            ? widget.user.courseName!
-                                    .substring(0, 50)
-                                    .capitalize() +
-                                ".."
-                            : widget.user.courseName!
-                        : AppLocalizations.of(context).scanQrCode,
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                ],
+              title: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.user.manifestationName != null
+                          ? widget.user.manifestationName!.length > 60
+                              ? widget.user.manifestationName!
+                                      .substring(0, 60)
+                                      .capitalize() +
+                                  ".."
+                              : widget.user.manifestationName!.capitalize()
+                          : AppLocalizations.of(context).scanQrCode,
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    Text(
+                      widget.user.courseName != null
+                          ? widget.user.courseName!.length > 50
+                              ? widget.user.courseName!
+                                      .substring(0, 50)
+                                      .capitalize() +
+                                  ".."
+                              : widget.user.courseName!
+                          : AppLocalizations.of(context).scanQrCode,
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
             ),
             body: Stack(
@@ -146,86 +149,86 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                         debugPrint('Failed to scan Barcode');
                       } else {
                         final String code = barcode.rawValue!;
-                        if(visibilityStore.isVisible){
-                        SVProgressHUD.show();
-                        if (widget.user.courseName != null) {
-                          if (codiceScan != barcode.rawValue) {
-                            
-                            visibilityStore.setSelected(false);
-                            codiceScan = barcode.rawValue!;
-                            lastBarcode = barcode.rawValue!;
-                            SoundHelper.play(0, player);
-                            //cameraController.stop();
-                            if (offlineMode.getOfflineMode) {
-                              //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
-                              await DatabaseHelper.instance
-                                  .addOfflineScan(OfflineScan(
-                                idManifestazione: widget.user.manifestationId!,
-                                codice: codiceScan,
-                                dataOra: DateTime.now().toString(),
-                                idCorso: widget.user.courseId!,
-                                idUtilizzatore: widget.user.id.toString(),
-                                ckExit: _controller.index.toString(),
-                              ));
-                            } else {
-                              scanStore
-                                  .fetchScan(
+                        if (visibilityStore.isVisible) {
+                          SVProgressHUD.show();
+                          if (widget.user.courseName != null) {
+                            if (codiceScan != barcode.rawValue) {
+                              visibilityStore.setSelected(false);
+                              codiceScan = barcode.rawValue!;
+                              lastBarcode = barcode.rawValue!;
+                              SoundHelper.play(0, player);
+                              //cameraController.stop();
+                              if (offlineMode.getOfflineMode) {
+                                //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
+                                await DatabaseHelper.instance
+                                    .addOfflineScan(OfflineScan(
+                                  idManifestazione:
+                                      widget.user.manifestationId!,
+                                  codice: codiceScan,
+                                  dataOra: DateTime.now().toString(),
+                                  idCorso: widget.user.courseId!,
+                                  idUtilizzatore: widget.user.id.toString(),
+                                  ckExit: _controller.index.toString(),
+                                ));
+                              } else {
+                                scanStore
+                                    .fetchScan(
+                                        widget.user.manifestationId.toString(),
+                                        codiceScan,
+                                        widget.user.id.toString(),
+                                        widget.user.courseId.toString(),
+                                        _controller.index.toString(),
+                                        envirormentProvider.envirormentState)
+                                    .then((mValue) {
+                                  infoCurrentPeopleBoxStore.fetchVisitors(
                                       widget.user.manifestationId.toString(),
-                                      codiceScan,
-                                      widget.user.id.toString(),
                                       widget.user.courseId.toString(),
-                                      _controller.index.toString(),
-                                      envirormentProvider.envirormentState)
-                                  .then((mValue) {
-                                infoCurrentPeopleBoxStore.fetchVisitors(
-                                    widget.user.manifestationId.toString(),
-                                    widget.user.courseId.toString(),
-                                    envirormentProvider.envirormentState);
-                              });
+                                      envirormentProvider.envirormentState);
+                                });
+                              }
+
+                              debugPrint('Barcode found! $code');
                             }
-
-                            debugPrint('Barcode found! $code');
-                          }
-
-                        } else {
-                          if (codiceScan != barcode.rawValue) {
-                            visibilityStore.setSelected(false);
-                            codiceScan = barcode.rawValue!;
-                            lastBarcode = barcode.rawValue!;
-                            SoundHelper.play(0, player);
-                            //cameraController.stop();
-                            if (offlineMode.getOfflineMode) {
-                              //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
-                              await DatabaseHelper.instance
-                                  .addOfflineScan(OfflineScan(
-                                idManifestazione: widget.user.manifestationId!,
-                                codice: codiceScan,
-                                dataOra: DateTime.now().toString(),
-                                idCorso: 0,
-                                idUtilizzatore: widget.user.id.toString(),
-                                ckExit: _controller.index.toString(),
-                              ));
-                            } else {
-                              scanStore
-                                  .fetchScan(
+                          } else {
+                            if (codiceScan != barcode.rawValue) {
+                              visibilityStore.setSelected(false);
+                              codiceScan = barcode.rawValue!;
+                              lastBarcode = barcode.rawValue!;
+                              SoundHelper.play(0, player);
+                              //cameraController.stop();
+                              if (offlineMode.getOfflineMode) {
+                                //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
+                                await DatabaseHelper.instance
+                                    .addOfflineScan(OfflineScan(
+                                  idManifestazione:
+                                      widget.user.manifestationId!,
+                                  codice: codiceScan,
+                                  dataOra: DateTime.now().toString(),
+                                  idCorso: 0,
+                                  idUtilizzatore: widget.user.id.toString(),
+                                  ckExit: _controller.index.toString(),
+                                ));
+                              } else {
+                                scanStore
+                                    .fetchScan(
+                                        widget.user.manifestationId.toString(),
+                                        codiceScan,
+                                        widget.user.id.toString(),
+                                        "0",
+                                        _controller.index.toString(),
+                                        envirormentProvider.envirormentState)
+                                    .then((mValue) {
+                                  infoCurrentPeopleBoxStore.fetchVisitors(
                                       widget.user.manifestationId.toString(),
-                                      codiceScan,
-                                      widget.user.id.toString(),
                                       "0",
-                                      _controller.index.toString(),
-                                      envirormentProvider.envirormentState)
-                                  .then((mValue) {
-                                infoCurrentPeopleBoxStore.fetchVisitors(
-                                    widget.user.manifestationId.toString(),
-                                    "0",
-                                    envirormentProvider.envirormentState);
-                              });
-                            }
+                                      envirormentProvider.envirormentState);
+                                });
+                              }
 
-                            debugPrint('Barcode found! $code');
+                              debugPrint('Barcode found! $code');
+                            }
                           }
                         }
-                      }
                       }
                     }),
                 Observer(
