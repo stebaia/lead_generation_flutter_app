@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
 import 'package:lead_generation_flutter_app/network/history_service.dart';
 import 'package:lead_generation_flutter_app/network/visitors_service.dart';
@@ -29,6 +30,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
     with TickerProviderStateMixin {
   final player = AudioPlayer();
   EnvirormentProvider envirormentProvider = EnvirormentProvider();
+
   late TabController _controller;
   final scanStore = NormalScanStore();
   final visibilityStore = VisibilityStore();
@@ -186,7 +188,25 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                             ],
                           ),
                         ),
-                      ))
+                      )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Text(
+                        "${infoCurrentPeopleBoxStore.visitorState} " +
+                            AppLocalizations.of(context).currentPeople,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
