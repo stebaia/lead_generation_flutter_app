@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lead_generation_flutter_app/db/database_helper.dart';
+import 'package:lead_generation_flutter_app/ui/screens/zebra_scanner_expositor.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/model/scan_offline.dart';
@@ -321,13 +322,31 @@ class _SettingUserScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ZebraScannerPage(
-                  user: widget.user,
-                ),
-              ))),
+          onTap: () {
+             switch (widget.user.userType) {
+                        case 106:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    ZebraScannerExpositorPage(
+                                      user: widget.user,
+                                    )),
+                          );
+                          break;
+
+                        default:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    ZebraScannerPage(
+                                      user: widget.user,
+                                    )),
+                          );
+                          break;
+                      }
+          }),
     ]));
   }
 
