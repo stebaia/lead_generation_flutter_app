@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:lead_generation_flutter_app/utils/extension.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
 import 'package:lead_generation_flutter_app/network/history_service.dart';
 import 'package:lead_generation_flutter_app/network/visitors_service.dart';
@@ -71,16 +73,39 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
   void initState() {
     super.initState();
     _controller = TabController(length: 2, vsync: this);
-    scanChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
+    
     _createProfile("DataWedgeFlutterDemo");
   }
 
-  void _onEvent(event) {
+  
+
+  List<Widget> tabBarWidget() => [
+        Tab(text: 'Entrata'),
+        Tab(
+          text: 'Uscita',
+        )
+      ];
+
+  Future<int> getVisitors() {
+    Future<int> requestVisitors = visitorsService.requestVisitors(
+        widget.user.manifestationId.toString(),
+        widget.user.courseId!,
+        envirormentProvider.envirormentState);
+    return requestVisitors;
+  }
+
+  
+
+  @override
+  Widget build(BuildContext context) {
+    final offlineMode = Provider.of<OfflineModeProvider>(context);
+    void _onEvent(event) {
     setState(() {
       Map barcodeScan = jsonDecode(event);
       _barcodeString = "Barcode: " + barcodeScan['scanData'];
       _barcodeSymbology = "Symbology: " + barcodeScan['symbology'];
       _scanTime = "At: " + barcodeScan['dateTime'];
+
     });
   }
 
@@ -105,26 +130,39 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
           "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "STOP_SCANNING");
     });
   }
+    scanChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
 
-  List<Widget> tabBarWidget() => [
-        Tab(text: 'Entrata'),
-        Tab(
-          text: 'Uscita',
-        )
-      ];
-
-  Future<int> getVisitors() {
-    Future<int> requestVisitors = visitorsService.requestVisitors(
-        widget.user.manifestationId.toString(),
-        widget.user.courseId!,
-        envirormentProvider.envirormentState);
-    return requestVisitors;
+    Widget infoCurrentPeopleBox(bool offlineMode) {
+    return Container(
+      margin: EdgeInsets.all(36),
+      height: 60,
+      width: 220,
+      child: Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "${infoCurrentPeopleBoxStore.visitorState} " +
+                AppLocalizations.of(context).currentPeople,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 12,
+          ),
+          offlineMode == true
+              ? Icon(
+                  Icons.wifi_off,
+                  color: Colors.white,
+                )
+              : Container()
+        ],
+      )),
+      decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(40))),
+    );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final offlineMode = Provider.of<OfflineModeProvider>(context);
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -142,19 +180,42 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.all(24),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                
                 children: [
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
+                  Text(
+                      widget.user.manifestationName != null
+                          ? widget.user.manifestationName!.length > 60
+                              ? widget.user.manifestationName!
+                                      .substring(0, 60)
+                                      .capitalize() +
+                                  ".."
+                              : widget.user.manifestationName!.capitalize()
+                          : AppLocalizations.of(context).scanQrCode,
+                      style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      widget.user.courseName != null
+                          ? widget.user.courseName!.length > 50
+                              ? widget.user.courseName!
+                                      .substring(0, 50)
+                                      .capitalize() +
+                                  ".."
+                              : widget.user.courseName!
+                          : AppLocalizations.of(context).scanQrCode,
+                          textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 30,),
                   const Text(
                     'Usa i pulsanti a lato\noppure\nutilizza il bottone sottostante',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
+                        
+                        fontSize: 14),
                   ),
                   const SizedBox(
                     height: 50,
@@ -186,7 +247,11 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                             ],
                           ),
                         ),
-                      ))
+                      )),
+                      
+                      Align(
+                    alignment: Alignment.bottomCenter,
+                    child: infoCurrentPeopleBox(offlineMode.getOfflineMode)),
                 ],
               ),
             ),
