@@ -20,18 +20,17 @@ import 'package:lead_generation_flutter_app/store/normalScan_store/normalScan_st
 import 'package:lead_generation_flutter_app/store/visibility_store/visibility_store.dart';
 import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 
-class ZebraScannerPage extends StatefulWidget {
-  ZebraScannerPage({super.key, required this.user});
+class ZebraScannerExpositorPage extends StatefulWidget {
+  ZebraScannerExpositorPage({super.key, required this.user});
   User user;
   @override
-  State<ZebraScannerPage> createState() => _ZebraScannerPageState();
+  State<ZebraScannerExpositorPage> createState() => _ZebraScannerExpositorPageState();
 }
 
-class _ZebraScannerPageState extends State<ZebraScannerPage>
+class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
     with TickerProviderStateMixin {
   final player = AudioPlayer();
   EnvirormentProvider envirormentProvider = EnvirormentProvider();
-
   late TabController _controller;
   final scanStore = NormalScanStore();
   final visibilityStore = VisibilityStore();
@@ -169,12 +168,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
       child: Scaffold(
           appBar: AppBar(
             title: Text("Zebra scanner"),
-            bottom: TabBar(
-                controller: _controller,
-                labelColor: Colors.black,
-                tabs: tabBarWidget(),
-                indicatorWeight: 6,
-                indicatorColor: ThemeHelper.primaryColor),
+            
           ),
           body: SingleChildScrollView(
             child: Container(
