@@ -7,7 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:lead_generation_flutter_app/db/database_helper.dart';
+import 'package:lead_generation_flutter_app/model/check_manager_model/check_model.dart';
+import 'package:lead_generation_flutter_app/model/scan_offline.dart';
+import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
 import 'package:lead_generation_flutter_app/utils/extension.dart';
+import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
@@ -32,6 +39,8 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
   final player = AudioPlayer();
   EnvirormentProvider envirormentProvider = EnvirormentProvider();
   late TabController _controller;
+  String codiceScan = "";
+  String lastBarcode = "";
   final scanStore = NormalScanStore();
   final visibilityStore = VisibilityStore();
   final infoCurrentPeopleBoxStore = InfoCurrentPeopleBoxStore();
@@ -98,41 +107,114 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
 
   @override
   Widget build(BuildContext context) {
+
+
     final offlineMode = Provider.of<OfflineModeProvider>(context);
-    void _onEvent(event) {
-    setState(() {
+    
+    Future<void> _onEvent(event) async {
+    
       Map barcodeScan = jsonDecode(event);
+      String barcode = barcodeScan['scanData'].toString();
       _barcodeString = "Barcode: " + barcodeScan['scanData'];
       _barcodeSymbology = "Symbology: " + barcodeScan['symbology'];
       _scanTime = "At: " + barcodeScan['dateTime'];
+      if (codiceScan != barcode) {
+                          codiceScan = barcode;
+                          lastBarcode = barcode;
+                          SoundHelper.play(0, player);
 
-    });
+                          //Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => ExpositorDetailScreen(
+                                        user: widget.user,
+                                        isNew: false,
+                                        codice20: codiceScan,
+                                      ))));
+                          
+                       // }
+      }
   }
 
-  void _onError(Object error) {
-    setState(() {
-      _barcodeString = "Barcode: error";
-      _barcodeSymbology = "Symbology: error";
-      _scanTime = "At: error";
-    });
+  Widget getLayerScan() {
+    SVProgressHUD.dismiss();
+    if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
+        int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
+      SoundHelper.play(1, player);
+      return GestureDetector(
+        child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  scanStore.scanState.description!,
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "Scansiona nuovo ticket",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24),
+                ),
+              ],
+            ),
+            color: Color.fromARGB(212, 13, 168, 83)),
+        onTap: () {
+          visibilityStore.setSelected(true);
+          codiceScan = "";
+          //cameraController.start();
+          scanStore
+              .setScanState(CheckManagerResult(value: "0", description: ""));
+        },
+      );
+    } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
+      SoundHelper.play(2, player);
+      return GestureDetector(
+        child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  scanStore.scanState.description!,
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                /*Text(
+                  "Click per riprovare",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24),
+                ),*/
+              ],
+            ),
+            color: Color.fromARGB(213, 230, 7, 7)),
+        onTap: () {
+          visibilityStore.setSelected(true);
+          codiceScan = "";
+          //cameraController.start();
+          scanStore
+              .setScanState(CheckManagerResult(value: "0", description: ""));
+        },
+      );
+    } else {
+      return Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Color(0x00FFFFFF));
+    }
   }
 
-  void startScan() {
-    setState(() {
-      _sendDataWedgeCommand(
-          "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "START_SCANNING");
-    });
-  }
-
-  void stopScan() {
-    setState(() {
-      _sendDataWedgeCommand(
-          "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "STOP_SCANNING");
-    });
-  }
-    scanChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
-
-    Widget infoCurrentPeopleBox(bool offlineMode) {
+  Widget infoCurrentPeopleBox(bool offlineMode) {
     return Container(
       margin: EdgeInsets.all(36),
       height: 60,
@@ -163,6 +245,83 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
           borderRadius: BorderRadius.all(Radius.circular(40))),
     );
   }
+
+  Widget getScanBoxState() {
+    if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
+        int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
+      SoundHelper.play(1, player);
+      return Container(
+        margin: EdgeInsets.all(36),
+        height: 60,
+        width: 220,
+        child: Center(
+          child: Text(
+            scanStore.scanState.description!,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.all(Radius.circular(40))),
+      );
+    } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
+      SoundHelper.play(2, player);
+      return Container(
+        margin: EdgeInsets.all(36),
+        height: 60,
+        width: 220,
+        child: Center(
+          child: Text(
+            scanStore.scanState.description!,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.all(Radius.circular(40))),
+      );
+    } else {
+      return Container(
+        margin: EdgeInsets.all(36),
+        height: 60,
+        width: 220,
+        child: Center(
+          child: Text(
+            'Scannerizza un qr code',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(40))),
+      );
+    }
+  }
+
+  void _onError(Object error) {
+    setState(() {
+      _barcodeString = "Barcode: error";
+      _barcodeSymbology = "Symbology: error";
+      _scanTime = "At: error";
+    });
+  }
+
+  void startScan() {
+    setState(() {
+      _sendDataWedgeCommand(
+          "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "START_SCANNING");
+    });
+  }
+
+  void stopScan() {
+    setState(() {
+      _sendDataWedgeCommand(
+          "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "STOP_SCANNING");
+    });
+  }
+    scanChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
+
+    
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -170,86 +329,56 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
             title: Text("Zebra scanner"),
             
           ),
-          body: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(24),
-              child: Column(
-                
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                      widget.user.manifestationName != null
-                          ? widget.user.manifestationName!.length > 60
-                              ? widget.user.manifestationName!
-                                      .substring(0, 60)
-                                      .capitalize() +
-                                  ".."
-                              : widget.user.manifestationName!.capitalize()
-                          : AppLocalizations.of(context).scanQrCode,
-                      style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      widget.user.courseName != null
-                          ? widget.user.courseName!.length > 50
-                              ? widget.user.courseName!
-                                      .substring(0, 50)
-                                      .capitalize() +
-                                  ".."
-                              : widget.user.courseName!
-                          : AppLocalizations.of(context).scanQrCode,
-                          textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 30,),
-                  const Text(
-                    'Usa i pulsanti a lato\noppure\nutilizza il bottone sottostante',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.black,
-                        
-                        fontSize: 14),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  TextButton(
-                      onPressed: () => startScan(),
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: ThemeHelper.primaryColor),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text(
-                                'Scan!',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 6,
-                              ),
-                              Icon(
-                                CupertinoIcons.qrcode,
-                                color: Colors.white,
-                              )
-                            ],
-                          ),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.all(24),
+                  child: Column(
+                    
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                          widget.user.manifestationName != null
+                              ? widget.user.manifestationName!.length > 60
+                                  ? widget.user.manifestationName!
+                                          .substring(0, 60)
+                                          .capitalize() +
+                                      ".."
+                                  : widget.user.manifestationName!.capitalize()
+                              : AppLocalizations.of(context).scanQrCode,
+                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                      )),
-                      
-                      Align(
-                    alignment: Alignment.bottomCenter,
-                    child: infoCurrentPeopleBox(offlineMode.getOfflineMode)),
-                ],
+                        Text(
+                          widget.user.courseName != null
+                              ? widget.user.courseName!.length > 50
+                                  ? widget.user.courseName!
+                                          .substring(0, 50)
+                                          .capitalize() +
+                                      ".."
+                                  : widget.user.courseName!
+                              : AppLocalizations.of(context).scanQrCode,
+                              textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 30,),
+                     
+                          
+                          Align(
+                        alignment: Alignment.bottomCenter,
+                        child: infoCurrentPeopleBox(offlineMode.getOfflineMode)),
+                       
+                    ],
+                  ),
+                ),
               ),
-            ),
+               Observer(
+                      builder: (context) => getLayerScan(),
+                    ),
+            ],
           )),
     );
   }

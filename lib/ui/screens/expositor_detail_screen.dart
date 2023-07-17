@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -118,6 +120,9 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
           selectedItemyStoreNation.setSelectedItem(selectedValue);
           selectedItemyStoreProvince.setSelectedItem(selectedValueProvince);
         }
+      }).onError((error, stackTrace) {
+        Fluttertoast.showToast(msg: "Espositore non trovato");
+        Timer.periodic(Duration(seconds: 3), (timer) { Navigator.pop(context); });
       });
     } else {
       selectedValue = "Italia";
