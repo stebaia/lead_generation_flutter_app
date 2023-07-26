@@ -148,7 +148,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           lastBarcode = barcode.rawValue!;
                           SoundHelper.play(0, player);
 
-                          Navigator.pop(context);
+                          //Navigator.pop(context);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
