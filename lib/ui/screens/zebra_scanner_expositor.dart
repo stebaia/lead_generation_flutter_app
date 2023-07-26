@@ -31,7 +31,8 @@ class ZebraScannerExpositorPage extends StatefulWidget {
   ZebraScannerExpositorPage({super.key, required this.user});
   User user;
   @override
-  State<ZebraScannerExpositorPage> createState() => _ZebraScannerExpositorPageState();
+  State<ZebraScannerExpositorPage> createState() =>
+      _ZebraScannerExpositorPageState();
 }
 
 class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
@@ -82,11 +83,9 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
   void initState() {
     super.initState();
     _controller = TabController(length: 2, vsync: this);
-    
+
     _createProfile("DataWedgeFlutterDemo");
   }
-
-  
 
   List<Widget> tabBarWidget() => [
         Tab(text: 'Entrata'),
@@ -103,281 +102,279 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
     return requestVisitors;
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
-
-
     final offlineMode = Provider.of<OfflineModeProvider>(context);
-    
+
     Future<void> _onEvent(event) async {
-    
       Map barcodeScan = jsonDecode(event);
       String barcode = barcodeScan['scanData'].toString();
       _barcodeString = "Barcode: " + barcodeScan['scanData'];
       _barcodeSymbology = "Symbology: " + barcodeScan['symbology'];
       _scanTime = "At: " + barcodeScan['dateTime'];
       if (codiceScan != barcode) {
-                          codiceScan = barcode;
-                          lastBarcode = barcode;
-                          SoundHelper.play(0, player);
+        codiceScan = barcode;
+        lastBarcode = barcode;
+        SoundHelper.play(0, player);
 
-                          //Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => ExpositorDetailScreen(
-                                        user: widget.user,
-                                        isNew: false,
-                                        codice20: codiceScan,
-                                      ))));
-                          
-                       // }
+        //Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: ((context) => ExpositorDetailScreen(
+                      user: widget.user,
+                      isNew: false,
+                      codice20: codiceScan,
+                    ))));
+
+        // }
       }
-  }
+    }
 
-  Widget getLayerScan() {
-    SVProgressHUD.dismiss();
-    if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
-        int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
-      SoundHelper.play(1, player);
-      return GestureDetector(
-        child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  scanStore.scanState.description!,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Scansiona nuovo ticket",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24),
-                ),
-              ],
-            ),
-            color: Color.fromARGB(212, 13, 168, 83)),
-        onTap: () {
-          visibilityStore.setSelected(true);
-          codiceScan = "";
-          //cameraController.start();
-          scanStore
-              .setScanState(CheckManagerResult(value: "0", description: ""));
-        },
-      );
-    } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
-      SoundHelper.play(2, player);
-      return GestureDetector(
-        child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  scanStore.scanState.description!,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                /*Text(
+    Widget getLayerScan() {
+      SVProgressHUD.dismiss();
+      if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
+          int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
+        SoundHelper.play(1, player);
+        return GestureDetector(
+          child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    scanStore.scanState.description!,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Scansiona nuovo ticket",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24),
+                  ),
+                ],
+              ),
+              color: Color.fromARGB(212, 13, 168, 83)),
+          onTap: () {
+            visibilityStore.setSelected(true);
+            codiceScan = "";
+            //cameraController.start();
+            scanStore
+                .setScanState(CheckManagerResult(value: "0", description: ""));
+          },
+        );
+      } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
+        SoundHelper.play(2, player);
+        return GestureDetector(
+          child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    scanStore.scanState.description!,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  /*Text(
                   "Click per riprovare",
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 24),
                 ),*/
-              ],
-            ),
-            color: Color.fromARGB(213, 230, 7, 7)),
-        onTap: () {
-          visibilityStore.setSelected(true);
-          codiceScan = "";
-          //cameraController.start();
-          scanStore
-              .setScanState(CheckManagerResult(value: "0", description: ""));
-        },
-      );
-    } else {
-      return Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Color(0x00FFFFFF));
+                ],
+              ),
+              color: Color.fromARGB(213, 230, 7, 7)),
+          onTap: () {
+            visibilityStore.setSelected(true);
+            codiceScan = "";
+            //cameraController.start();
+            scanStore
+                .setScanState(CheckManagerResult(value: "0", description: ""));
+          },
+        );
+      } else {
+        return Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Color(0x00FFFFFF));
+      }
     }
-  }
 
-  Widget infoCurrentPeopleBox(bool offlineMode) {
-    return Container(
-      margin: EdgeInsets.all(36),
-      height: 60,
-      width: 220,
-      child: Center(
-          child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "${infoCurrentPeopleBoxStore.visitorState} " +
-                AppLocalizations.of(context).currentPeople,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            width: 12,
-          ),
-          offlineMode == true
-              ? Icon(
-                  Icons.wifi_off,
-                  color: Colors.white,
-                )
-              : Container()
-        ],
-      )),
-      decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.all(Radius.circular(40))),
-    );
-  }
-
-  Widget getScanBoxState() {
-    if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
-        int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
-      SoundHelper.play(1, player);
+    Widget infoCurrentPeopleBox(bool offlineMode) {
       return Container(
         margin: EdgeInsets.all(36),
         height: 60,
         width: 220,
         child: Center(
-          child: Text(
-            scanStore.scanState.description!,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: BoxDecoration(
-            color: Colors.green,
-            borderRadius: BorderRadius.all(Radius.circular(40))),
-      );
-    } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
-      SoundHelper.play(2, player);
-      return Container(
-        margin: EdgeInsets.all(36),
-        height: 60,
-        width: 220,
-        child: Center(
-          child: Text(
-            scanStore.scanState.description!,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.all(Radius.circular(40))),
-      );
-    } else {
-      return Container(
-        margin: EdgeInsets.all(36),
-        height: 60,
-        width: 220,
-        child: Center(
-          child: Text(
-            'Scannerizza un qr code',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "${infoCurrentPeopleBoxStore.visitorState} " +
+                  AppLocalizations.of(context).currentPeople,
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            offlineMode == true
+                ? Icon(
+                    Icons.wifi_off,
+                    color: Colors.white,
+                  )
+                : Container()
+          ],
+        )),
         decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.all(Radius.circular(40))),
       );
     }
-  }
 
-  void _onError(Object error) {
-    setState(() {
-      _barcodeString = "Barcode: error";
-      _barcodeSymbology = "Symbology: error";
-      _scanTime = "At: error";
-    });
-  }
+    Widget getScanBoxState() {
+      if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
+          int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
+        SoundHelper.play(1, player);
+        return Container(
+          margin: EdgeInsets.all(36),
+          height: 60,
+          width: 220,
+          child: Center(
+            child: Text(
+              scanStore.scanState.description!,
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.all(Radius.circular(40))),
+        );
+      } else if (int.parse(scanStore.scanState.value!).isBetween(200, 299)) {
+        SoundHelper.play(2, player);
+        return Container(
+          margin: EdgeInsets.all(36),
+          height: 60,
+          width: 220,
+          child: Center(
+            child: Text(
+              scanStore.scanState.description!,
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.all(Radius.circular(40))),
+        );
+      } else {
+        return Container(
+          margin: EdgeInsets.all(36),
+          height: 60,
+          width: 220,
+          child: Center(
+            child: Text(
+              'Scannerizza un qr code',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+          decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.all(Radius.circular(40))),
+        );
+      }
+    }
 
-  void startScan() {
-    setState(() {
-      _sendDataWedgeCommand(
-          "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "START_SCANNING");
-    });
-  }
+    void _onError(Object error) {
+      setState(() {
+        _barcodeString = "Barcode: error";
+        _barcodeSymbology = "Symbology: error";
+        _scanTime = "At: error";
+      });
+    }
 
-  void stopScan() {
-    setState(() {
-      _sendDataWedgeCommand(
-          "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "STOP_SCANNING");
-    });
-  }
+    void startScan() {
+      setState(() {
+        _sendDataWedgeCommand(
+            "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "START_SCANNING");
+      });
+    }
+
+    void stopScan() {
+      setState(() {
+        _sendDataWedgeCommand(
+            "com.symbol.datawedge.api.SOFT_SCAN_TRIGGER", "STOP_SCANNING");
+      });
+    }
+
     scanChannel.receiveBroadcastStream().listen(_onEvent, onError: _onError);
 
-    
     return DefaultTabController(
       length: 2,
       child: Scaffold(
           appBar: AppBar(
-            title: Text("Zebra scanner"),
-            
+            title: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.user.manifestationName != null
+                        ? widget.user.manifestationName!.length > 60
+                            ? widget.user.manifestationName!
+                                    .substring(0, 60)
+                                    .capitalize() +
+                                ".."
+                            : widget.user.manifestationName!.capitalize()
+                        : AppLocalizations.of(context).scanQrCode,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  Text(
+                    widget.user.courseName != null
+                        ? widget.user.courseName!.length > 60
+                            ? widget.user.courseName!
+                                    .substring(0, 60)
+                                    .capitalize() +
+                                ".."
+                            : widget.user.courseName!.capitalize()
+                        : AppLocalizations.of(context).scanQrCode,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
           ),
           body: Stack(
             children: [
               SingleChildScrollView(
                 child: Container(
+                  height: MediaQuery.of(context).size.height - 100,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.all(24),
-                  child: Column(
-                    
+                  child: Stack(
                     children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                          widget.user.manifestationName != null
-                              ? widget.user.manifestationName!.length > 60
-                                  ? widget.user.manifestationName!
-                                          .substring(0, 60)
-                                          .capitalize() +
-                                      ".."
-                                  : widget.user.manifestationName!.capitalize()
-                              : AppLocalizations.of(context).scanQrCode,
-                          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          widget.user.courseName != null
-                              ? widget.user.courseName!.length > 50
-                                  ? widget.user.courseName!
-                                          .substring(0, 50)
-                                          .capitalize() +
-                                      ".."
-                                  : widget.user.courseName!
-                              : AppLocalizations.of(context).scanQrCode,
-                              textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 30,),
-                     
-                          
-                          Align(
-                        alignment: Alignment.bottomCenter,
-                        child: infoCurrentPeopleBox(offlineMode.getOfflineMode)),
-                       
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child:
+                              infoCurrentPeopleBox(offlineMode.getOfflineMode)),
                     ],
                   ),
                 ),
               ),
-               Observer(
-                      builder: (context) => getLayerScan(),
-                    ),
+              Observer(
+                builder: (context) => getLayerScan(),
+              ),
             ],
           )),
     );

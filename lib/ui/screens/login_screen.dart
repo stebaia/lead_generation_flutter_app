@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
               fontSize: 30, fontWeight: FontWeight.w700, color: PrimaryColor),
           children: [
             TextSpan(
-              text: 'Ticket',
+              text: 'Lead',
               style: TextStyle(
                   color:
                       darkTheme ? CupertinoColors.white : CupertinoColors.label,
@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontFamily: 'Poppins'),
             ),
             TextSpan(
-              text: 'Manager',
+              text: 'Generation',
               style: TextStyle(
                   color: PrimaryColor, fontSize: 30, fontFamily: 'Poppins'),
             ),

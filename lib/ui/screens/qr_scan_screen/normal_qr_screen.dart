@@ -102,6 +102,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
               backgroundColor: Colors.black,
               bottom: TabBar(
                   controller: _controller,
+                  unselectedLabelColor: Colors.white,
                   labelColor: Colors.white,
                   tabs: tabBarWidget(),
                   indicatorWeight: 6,
