@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -54,6 +55,8 @@ class _NormalQrScreenState extends State<NormalQrScreen>
 
   VisitorsService visitorsService = VisitorsService();
   HistoryService historyService = HistoryService();
+  static const MethodChannel methodChannel =
+      MethodChannel('com.darryncampbell.datawedgeflutter/command');
 
   @override
   void initState() {
@@ -69,7 +72,17 @@ class _NormalQrScreenState extends State<NormalQrScreen>
       }
     });
     animateScanAnimation(false);
+    _createProfile("DataWedgeFlutterDemo");
     super.initState();
+  }
+
+  Future<void> _createProfile(String profileName) async {
+    try {
+      await methodChannel.invokeMethod(
+          'createDataWedgeProfileDisabled', profileName);
+    } on PlatformException {
+      //  Error invoking Android method
+    }
   }
 
   @override
@@ -93,6 +106,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                   color: Colors.white,
                 )),
                 onPressed: () {
+                  SVProgressHUD.dismiss();
                   Navigator.pop(context);
                 },
               ),
@@ -151,9 +165,10 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                       } else {
                         final String code = barcode.rawValue!;
                         if (visibilityStore.isVisible) {
-                          SVProgressHUD.show();
+                          
                           if (widget.user.courseName != null) {
                             if (codiceScan != barcode.rawValue) {
+                              SVProgressHUD.show();
                               visibilityStore.setSelected(false);
                               codiceScan = barcode.rawValue!;
                               lastBarcode = barcode.rawValue!;
@@ -161,6 +176,8 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {
                                 //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
+                                
+                                
                                 await DatabaseHelper.instance
                                     .addOfflineScan(OfflineScan(
                                   idManifestazione:
@@ -171,6 +188,12 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                                   idUtilizzatore: widget.user.id.toString(),
                                   ckExit: _controller.index.toString(),
                                 ));
+                                await DatabaseHelper.instance
+                                    .getOfflineScan()
+                                    .then((value) => infoCurrentPeopleBoxStore
+                                        .setScanState(value.length));
+                                SVProgressHUD.dismiss();
+                                visibilityStore.setSelected(true);
                               } else {
                                 scanStore
                                     .fetchScan(
@@ -189,15 +212,20 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               }
 
                               debugPrint('Barcode found! $code');
+                            }else {
+                              SVProgressHUD.dismiss();
                             }
                           } else {
                             if (codiceScan != barcode.rawValue) {
+                              SVProgressHUD.show();
                               visibilityStore.setSelected(false);
                               codiceScan = barcode.rawValue!;
                               lastBarcode = barcode.rawValue!;
                               SoundHelper.play(0, player);
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {
+                                
+                                
                                 //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
                                 await DatabaseHelper.instance
                                     .addOfflineScan(OfflineScan(
@@ -209,6 +237,12 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                                   idUtilizzatore: widget.user.id.toString(),
                                   ckExit: _controller.index.toString(),
                                 ));
+                                await DatabaseHelper.instance
+                                    .getOfflineScan()
+                                    .then((value) => infoCurrentPeopleBoxStore
+                                        .setScanState(value.length));
+                                SVProgressHUD.dismiss();
+                                visibilityStore.setSelected(true);
                               } else {
                                 scanStore
                                     .fetchScan(
@@ -227,6 +261,8 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               }
 
                               debugPrint('Barcode found! $code');
+                            }else {
+                              SVProgressHUD.dismiss();
                             }
                           }
                         }

@@ -12,6 +12,7 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:lead_generation_flutter_app/db/database_helper.dart';
 import 'package:lead_generation_flutter_app/model/check_manager_model/check_model.dart';
 import 'package:lead_generation_flutter_app/model/scan_offline.dart';
+import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
 import 'package:lead_generation_flutter_app/utils/extension.dart';
 import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
@@ -296,6 +297,39 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
       }
     }
 
+    Widget getHistory(BuildContext context) {
+    return widget.user.courseName != null
+        ? IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30))),
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25))),
+                        margin: EdgeInsets.only(top: 50),
+                        child: ComplexModal(
+                            idManifestazione: widget.user.manifestationId!,
+                            idCorso: widget.user.courseId!,
+                            barcode: lastBarcode));
+                  });
+            },
+            icon: Icon(
+              Icons.history_sharp,
+              color: Colors.black,
+            ))
+        : Container();
+  }
+
     void _onError(Object error) {
       setState(() {
         _barcodeString = "Barcode: error";
@@ -324,6 +358,9 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            actions: [
+              Observer(builder: (_) => getHistory(context)),
+            ],
             title: Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -359,11 +396,20 @@ class _ZebraScannerExpositorPageState extends State<ZebraScannerExpositorPage>
             children: [
               SingleChildScrollView(
                 child: Container(
-                  height: MediaQuery.of(context).size.height - 100,
+                  height: MediaQuery.of(context).size.height - 120,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.all(24),
                   child: Stack(
                     children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            Text('Ultimo codice scannerizzato'),
+                            Text(lastBarcode)
+                          ],
+                        ),
+                      ),
                       Align(
                           alignment: Alignment.bottomCenter,
                           child:

@@ -12,6 +12,7 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:lead_generation_flutter_app/db/database_helper.dart';
 import 'package:lead_generation_flutter_app/model/check_manager_model/check_model.dart';
 import 'package:lead_generation_flutter_app/model/scan_offline.dart';
+import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
 import 'package:lead_generation_flutter_app/utils/extension.dart';
 import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
 import 'package:provider/provider.dart';
@@ -120,7 +121,11 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
         SoundHelper.play(0, player);
         //cameraController.stop();
         if (offlineMode.getOfflineMode) {
+          setState(() {
+            lastBarcode = barcode;
+          });
           //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
+          
           await DatabaseHelper.instance.addOfflineScan(OfflineScan(
             idManifestazione: widget.user.manifestationId!,
             codice: codiceScan,
@@ -129,6 +134,9 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
             idUtilizzatore: widget.user.id.toString(),
             ckExit: _controller.index.toString(),
           ));
+          await DatabaseHelper.instance.getOfflineScan().then(
+              (value) => infoCurrentPeopleBoxStore.setScanState(value.length));
+          SVProgressHUD.dismiss();
         } else {
           scanStore
               .fetchScan(
@@ -154,6 +162,9 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
         SoundHelper.play(0, player);
         //cameraController.stop();
         if (offlineMode.getOfflineMode) {
+          setState(() {
+            lastBarcode = barcode;
+          });
           //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
           await DatabaseHelper.instance.addOfflineScan(OfflineScan(
             idManifestazione: widget.user.manifestationId!,
@@ -163,6 +174,9 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
             idUtilizzatore: widget.user.id.toString(),
             ckExit: _controller.index.toString(),
           ));
+          await DatabaseHelper.instance.getOfflineScan().then(
+              (value) => infoCurrentPeopleBoxStore.setScanState(value.length));
+              SVProgressHUD.dismiss();
         } else {
           scanStore
               .fetchScan(
@@ -296,6 +310,39 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
       );
     }
 
+    Widget getHistory(BuildContext context) {
+      return widget.user.courseName != null
+          ? IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30))),
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25),
+                                  topRight: Radius.circular(25))),
+                          margin: EdgeInsets.only(top: 50),
+                          child: ComplexModal(
+                              idManifestazione: widget.user.manifestationId!,
+                              idCorso: widget.user.courseId!,
+                              barcode: lastBarcode));
+                    });
+              },
+              icon: Icon(
+                Icons.history_sharp,
+                color: Colors.black,
+              ))
+          : Container();
+    }
+
     Widget getScanBoxState() {
       if (int.parse(scanStore.scanState.value!).isBetween(100, 199) ||
           int.parse(scanStore.scanState.value!).isBetween(300, 399)) {
@@ -379,6 +426,16 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                SVProgressHUD.dismiss();
+                Navigator.pop(context);
+              },
+            ),
+            actions: [
+              Observer(builder: (_) => getHistory(context)),
+            ],
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,15 +475,24 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
             children: [
               SingleChildScrollView(
                 child: Container(
-                  height: MediaQuery.of(context).size.height - 100,
+                  height: MediaQuery.of(context).size.height - 120,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.all(24),
                   child: Stack(
                     children: [
-                      Align(
-                          alignment: Alignment.bottomCenter,
-                          child:
-                              infoCurrentPeopleBox(offlineMode.getOfflineMode)),
+                      Container(
+                        child: Center(
+                            child: lastBarcode != ""
+                                ? Text(
+                                    'Ultimo codice scannerizzato: $lastBarcode')
+                                : Container()),
+                      ),
+                      Observer(
+                        builder: (context) => Align(
+                            alignment: Alignment.bottomCenter,
+                            child: infoCurrentPeopleBox(
+                                offlineMode.getOfflineMode)),
+                      ),
                     ],
                   ),
                 ),

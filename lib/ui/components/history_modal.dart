@@ -66,10 +66,10 @@ class _MyComplexModalState extends State<ComplexModal> {
                     envirormentProvider.envirormentState),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    if (listOfHistory.length == 0) {
-                      listOfHistory = snapshot.data as List<History>;
-                    }
-                    return SafeArea(
+                    listOfHistory = snapshot.data as List<History>;
+                    if (listOfHistory.length > 0) {
+                      
+                      return SafeArea(
                       bottom: false,
                       child: ListView.builder(
                           itemCount: listOfHistory.length,
@@ -92,6 +92,10 @@ class _MyComplexModalState extends State<ComplexModal> {
                                 ),
                               )),
                     );
+                    }else {
+                      return Center(child: Text('Nessuno storico presente'),);
+                    }
+                    
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
