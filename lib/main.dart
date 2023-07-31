@@ -72,6 +72,12 @@ class _MyAppState extends State<MyAppPage> {
         await offlineModeProvider.envirormentPreferences.getMode();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    getCurrentAppTheme();
+  }
+
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
