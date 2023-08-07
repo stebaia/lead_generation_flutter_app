@@ -165,7 +165,6 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                       } else {
                         final String code = barcode.rawValue!;
                         if (visibilityStore.isVisible) {
-                          
                           if (widget.user.courseName != null) {
                             if (codiceScan != barcode.rawValue) {
                               SVProgressHUD.show();
@@ -176,8 +175,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {
                                 //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
-                                
-                                
+
                                 await DatabaseHelper.instance
                                     .addOfflineScan(OfflineScan(
                                   idManifestazione:
@@ -212,7 +210,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               }
 
                               debugPrint('Barcode found! $code');
-                            }else {
+                            } else {
                               SVProgressHUD.dismiss();
                             }
                           } else {
@@ -224,8 +222,6 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               SoundHelper.play(0, player);
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {
-                                
-                                
                                 //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
                                 await DatabaseHelper.instance
                                     .addOfflineScan(OfflineScan(
@@ -261,7 +257,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               }
 
                               debugPrint('Barcode found! $code');
-                            }else {
+                            } else {
                               SVProgressHUD.dismiss();
                             }
                           }
@@ -344,7 +340,34 @@ class _NormalQrScreenState extends State<NormalQrScreen>
               Icons.history_sharp,
               color: Colors.white,
             ))
-        : Container();
+        : IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30))),
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25))),
+                        margin: EdgeInsets.only(top: 50),
+                        child: ComplexModal(
+                            idManifestazione: widget.user.manifestationId!,
+                            idCorso: widget.user.courseId!,
+                            barcode: lastBarcode));
+                  });
+            },
+            icon: Icon(
+              Icons.history_sharp,
+              color: Colors.white,
+            ));
   }
 
   Widget getLayerScan() {
