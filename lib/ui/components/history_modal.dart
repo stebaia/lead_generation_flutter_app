@@ -64,7 +64,7 @@ class _MyComplexModalState extends State<ComplexModal> {
                       ),
                     )),
               ),
-              child: idCorso != null
+              child: idCorso! > 0
                   ? FutureBuilder(
                       future: getHistoryScan(idManifestazione, idCorso!,
                           barcode, envirormentProvider.envirormentState),
@@ -121,7 +121,7 @@ class _MyComplexModalState extends State<ComplexModal> {
                                           listOfHistory[index].description,
                                           style: TextStyle(
                                             color: themeChange.darkTheme
-                                                ? CupertinoColors.white
+                                                ? CupertinoColors.black
                                                 : CupertinoColors.black,
                                           ),
                                         ),
@@ -129,7 +129,7 @@ class _MyComplexModalState extends State<ComplexModal> {
                                           "${listOfHistory[index].gate} ${listOfHistory[index].data}",
                                           style: TextStyle(
                                             color: themeChange.darkTheme
-                                                ? CupertinoColors.white
+                                                ? CupertinoColors.black
                                                 : CupertinoColors.black,
                                           ),
                                         ),

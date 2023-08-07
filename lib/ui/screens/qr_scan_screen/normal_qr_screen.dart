@@ -360,7 +360,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                         margin: EdgeInsets.only(top: 50),
                         child: ComplexModal(
                             idManifestazione: widget.user.manifestationId!,
-                            idCorso: widget.user.courseId!,
+                            idCorso: widget.user.courseId,
                             barcode: lastBarcode));
                   });
             },
