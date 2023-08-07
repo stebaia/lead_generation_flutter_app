@@ -340,7 +340,34 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                 Icons.history_sharp,
                 color: Colors.black,
               ))
-          : Container();
+          :  IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30))),
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25))),
+                        margin: EdgeInsets.only(top: 50),
+                        child: ComplexModal(
+                            idManifestazione: widget.user.manifestationId!,
+                            idCorso: widget.user.courseId,
+                            barcode: lastBarcode));
+                  });
+            },
+            icon: Icon(
+              Icons.history_sharp,
+              color: Colors.black,
+            ));
     }
 
     Widget getScanBoxState() {

@@ -99,7 +99,7 @@ class _MyAppState extends State<MyAppPage> {
             Locale('en', ''), // English, no country code
             Locale('it', ''), // Spanish, no country code
           ],
-          title: 'TicketManager',
+          title: 'LeadGenerationApp',
           theme: ThemeHelper.myThemeData(themeProvider.darkTheme, context),
           initialRoute: widget.initialRoute,
           routes: {
