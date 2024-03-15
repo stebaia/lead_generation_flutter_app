@@ -93,7 +93,7 @@ class InitQrScreen extends StatelessWidget {
                                     visitors = snapshot.data as int;
                                     return Text(
                                       "$visitors " +
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .currentPeople,
                                       style: TextStyle(
                                           fontSize: 18,
@@ -140,14 +140,14 @@ class InitQrScreen extends StatelessWidget {
               height: 30,
             ),
             Text(
-              AppLocalizations.of(context).scanQrCode,
+              AppLocalizations.of(context)!.scanQrCode,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   color: themeChange.darkTheme ? Colors.white : Colors.black),
             ),
             Text(
-              AppLocalizations.of(context).tap_the_button,
+              AppLocalizations.of(context)!.tap_the_button,
               style: TextStyle(
                   color: themeChange.darkTheme ? Colors.white : Colors.black),
               textAlign: TextAlign.center,
@@ -227,11 +227,11 @@ class InitQrScreen extends StatelessWidget {
                               }*/
                     }),
                     style: TextButton.styleFrom(
-                      primary: Colors.white,
+                      foregroundColor: Colors.white,
                       backgroundColor: PrimaryColor,
                     ),
                     child: Text(
-                      AppLocalizations.of(context).scan_exclamative,
+                      AppLocalizations.of(context)!.scan_exclamative,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

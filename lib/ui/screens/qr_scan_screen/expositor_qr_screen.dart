@@ -114,7 +114,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                     .capitalize() +
                                 ".."
                             : widget.user.manifestationName!.capitalize()
-                        : AppLocalizations.of(context).scanQrCode,
+                        : AppLocalizations.of(context)!.scanQrCode,
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   Text(
@@ -125,7 +125,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                     .capitalize() +
                                 ".."
                             : widget.user.courseName!.capitalize()
-                        : AppLocalizations.of(context).scanQrCode,
+                        : AppLocalizations.of(context)!.scanQrCode,
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
@@ -142,27 +142,32 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                       if (barcode.rawValue == null) {
                         debugPrint('Failed to scan Barcode');
                       } else {
-                        final String code = barcode.rawValue!;
-                        if (codiceScan != barcode.rawValue) {
-                          codiceScan = barcode.rawValue!;
-                          lastBarcode = barcode.rawValue!;
-                          SoundHelper.play(0, player);
+                        if (!barcode.rawValue!.contains("http") &&
+                            !barcode.rawValue!.contains("www")) {
+                          final String code = barcode.rawValue!;
+                          print("TICKET: " + code);
+                          if (codiceScan != barcode.rawValue) {
+                            codiceScan = barcode.rawValue!;
+                            lastBarcode = barcode.rawValue!;
+                            SoundHelper.play(0, player);
 
-                          //Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => ExpositorDetailScreen(
-                                        user: widget.user,
-                                        isNew: false,
-                                        codice20: codiceScan,
-                                      ))));
+                            //Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) =>
+                                        ExpositorDetailScreen(
+                                          user: widget.user,
+                                          isNew: false,
+                                          codice20: codiceScan,
+                                        ))));
 
-                          //visibilityStore.setSelected(false);
+                            //visibilityStore.setSelected(false);
 
-                          //cameraController.stop();
+                            //cameraController.stop();
 
-                          debugPrint('Barcode found! $code');
+                            debugPrint('Barcode found! $code');
+                          }
                         }
                       }
                     }),
@@ -241,7 +246,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
       width: 220,
       child: Center(
         child: Text(
-          AppLocalizations.of(context).scan,
+          AppLocalizations.of(context)!.scan,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),

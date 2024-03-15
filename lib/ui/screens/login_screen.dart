@@ -191,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Observer(
                         builder: ((context) => TextButton(
                               style: TextButton.styleFrom(
-                                primary: Colors.white,
+                                foregroundColor: Colors.white,
                                 backgroundColor: Colors.black,
                               ),
                               onPressed: () {
@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 } else {}
                               },
                               child:
-                                  Text(AppLocalizations.of(context).tap_login),
+                                  Text(AppLocalizations.of(context)!.tap_login),
                             ))),
                   )
                 ],

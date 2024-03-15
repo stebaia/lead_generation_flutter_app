@@ -43,17 +43,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
     List<BottomNavigationBarItem> tabList = [];
     tabList.add(BottomNavigationBarItem(
       icon: Icon(Icons.camera),
-      label: AppLocalizations.of(context).scan,
+      label: AppLocalizations.of(context)!.scan,
     ));
     if (mUser.userType == 106) {
       tabList.add(BottomNavigationBarItem(
         icon: Icon(Icons.people),
-        label: AppLocalizations.of(context).expositors,
+        label: AppLocalizations.of(context)!.expositors,
       ));
     }
     tabList.add((BottomNavigationBarItem(
       icon: Icon(Icons.settings),
-      label: AppLocalizations.of(context).setting,
+      label: AppLocalizations.of(context)!.setting,
     )));
     return tabList;
   }

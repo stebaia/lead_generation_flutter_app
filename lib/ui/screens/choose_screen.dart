@@ -91,7 +91,7 @@ class ChooseScreen extends StatelessWidget {
                                     child: TextButton.icon(
                                         icon: Icon(Icons.qr_code),
                                         style: TextButton.styleFrom(
-                                          primary: Colors.white,
+                                          foregroundColor: Colors.white,
                                           backgroundColor:
                                               ThemeHelper.primaryColor,
                                         ),
@@ -126,7 +126,7 @@ class ChooseScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    AppLocalizations.of(context).select_event,
+                                    AppLocalizations.of(context)!.select_event,
                                     style: TextStyle(
                                         color: themeChange.darkTheme
                                             ? CupertinoColors.white
@@ -160,7 +160,7 @@ class ChooseScreen extends StatelessWidget {
                                                     isExpanded: true,
                                                     hint: Text(
                                                       AppLocalizations.of(
-                                                              context)
+                                                              context)!
                                                           .select_event,
                                                       style: TextStyle(
                                                           color: Colors.white,
@@ -211,7 +211,7 @@ class ChooseScreen extends StatelessWidget {
                                     alignment: Alignment.centerRight,
                                     child: TextButton(
                                       style: TextButton.styleFrom(
-                                        primary: Colors.white,
+                                        foregroundColor: Colors.white,
                                         backgroundColor: Colors.black,
                                       ),
                                       onPressed: () {
@@ -219,9 +219,9 @@ class ChooseScreen extends StatelessWidget {
                                             dropDownStore.isSelected, context);
                                       },
                                       child: Text(dropDownStore.isSelected
-                                          ? AppLocalizations.of(context)
+                                          ? AppLocalizations.of(context)!
                                               .go_to_scan
-                                          : AppLocalizations.of(context)
+                                          : AppLocalizations.of(context)!
                                               .select_event),
                                     ),
                                   ),
@@ -280,7 +280,7 @@ class ChooseScreen extends StatelessWidget {
                     child: TextButton.icon(
                         icon: Icon(Icons.qr_code),
                         style: TextButton.styleFrom(
-                          primary: Colors.white,
+                          foregroundColor: Colors.white,
                           backgroundColor: ThemeHelper.primaryColor,
                         ),
                         onPressed: () {

@@ -323,29 +323,28 @@ class _SettingUserScreenState extends State<SettingsScreen> {
             ),
           ),
           onTap: () {
-             switch (widget.user.userType) {
-                        case 106:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ZebraScannerExpositorPage(
-                                      user: widget.user,
-                                    )),
-                          );
-                          break;
+            switch (widget.user.userType) {
+              case 106:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          ZebraScannerExpositorPage(
+                            user: widget.user,
+                          )),
+                );
+                break;
 
-                        default:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ZebraScannerPage(
-                                      user: widget.user,
-                                    )),
-                          );
-                          break;
-                      }
+              default:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ZebraScannerPage(
+                            user: widget.user,
+                          )),
+                );
+                break;
+            }
           }),
     ]));
   }
@@ -379,7 +378,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      primary: Colors.white,
+                      foregroundColor: Colors.white,
                       backgroundColor: Colors.green,
                     ),
                     onPressed: () async {
@@ -461,11 +460,11 @@ class _SettingUserScreenState extends State<SettingsScreen> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text(AppLocalizations.of(context).titleDialogLogout),
-          content: Text(AppLocalizations.of(context).contentDialogLogout),
+          title: Text(AppLocalizations.of(context)!.titleDialogLogout),
+          content: Text(AppLocalizations.of(context)!.contentDialogLogout),
           actions: <Widget>[
             CupertinoDialogAction(
-                child: Text(AppLocalizations.of(context).yes),
+                child: Text(AppLocalizations.of(context)!.yes),
                 onPressed: () {
                   requestLogout(idUser, envirorment).then((value) {
                     if (value > -1) {
@@ -479,7 +478,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                   });
                 }),
             CupertinoDialogAction(
-              child: Text(AppLocalizations.of(context).no),
+              child: Text(AppLocalizations.of(context)!.no),
               onPressed: () {
                 Navigator.pop(context);
               },

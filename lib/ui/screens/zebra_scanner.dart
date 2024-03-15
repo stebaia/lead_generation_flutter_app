@@ -125,7 +125,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
             lastBarcode = barcode;
           });
           //SOLO DA METTERE NELLA SCANNERIZZAZIONE NORMALE
-          
+
           await DatabaseHelper.instance.addOfflineScan(OfflineScan(
             idManifestazione: widget.user.manifestationId!,
             codice: codiceScan,
@@ -176,7 +176,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
           ));
           await DatabaseHelper.instance.getOfflineScan().then(
               (value) => infoCurrentPeopleBoxStore.setScanState(value.length));
-              SVProgressHUD.dismiss();
+          SVProgressHUD.dismiss();
         } else {
           scanStore
               .fetchScan(
@@ -289,7 +289,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
           children: [
             Text(
               "${infoCurrentPeopleBoxStore.visitorState} " +
-                  AppLocalizations.of(context).currentPeople,
+                  AppLocalizations.of(context)!.currentPeople,
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -340,34 +340,34 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                 Icons.history_sharp,
                 color: Colors.black,
               ))
-          :  IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30))),
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(25),
-                                topRight: Radius.circular(25))),
-                        margin: EdgeInsets.only(top: 50),
-                        child: ComplexModal(
-                            idManifestazione: widget.user.manifestationId!,
-                            idCorso: widget.user.courseId,
-                            barcode: lastBarcode));
-                  });
-            },
-            icon: Icon(
-              Icons.history_sharp,
-              color: Colors.black,
-            ));
+          : IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30))),
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25),
+                                  topRight: Radius.circular(25))),
+                          margin: EdgeInsets.only(top: 50),
+                          child: ComplexModal(
+                              idManifestazione: widget.user.manifestationId!,
+                              idCorso: widget.user.courseId,
+                              barcode: lastBarcode));
+                    });
+              },
+              icon: Icon(
+                Icons.history_sharp,
+                color: Colors.black,
+              ));
     }
 
     Widget getScanBoxState() {
@@ -475,7 +475,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                                   .capitalize() +
                               ".."
                           : widget.user.manifestationName!.capitalize()
-                      : AppLocalizations.of(context).scanQrCode,
+                      : AppLocalizations.of(context)!.scanQrCode,
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 Text(
@@ -486,7 +486,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                                   .capitalize() +
                               ".."
                           : widget.user.courseName!
-                      : AppLocalizations.of(context).scanQrCode,
+                      : AppLocalizations.of(context)!.scanQrCode,
                   style: TextStyle(color: Colors.black, fontSize: 14),
                 ),
               ],

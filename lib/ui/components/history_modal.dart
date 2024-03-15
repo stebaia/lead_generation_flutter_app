@@ -49,7 +49,7 @@ class _MyComplexModalState extends State<ComplexModal> {
           builder: (context) => CupertinoPageScaffold(
               navigationBar: CupertinoNavigationBar(
                 middle: Text(
-                  AppLocalizations.of(context).historyScannerization,
+                  AppLocalizations.of(context)!.historyScannerization,
                   style: TextStyle(color: ThemeHelper.primaryColor),
                 ),
                 trailing: GestureDetector(

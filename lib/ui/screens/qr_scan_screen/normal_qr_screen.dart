@@ -134,7 +134,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                                       .capitalize() +
                                   ".."
                               : widget.user.manifestationName!.capitalize()
-                          : AppLocalizations.of(context).scanQrCode,
+                          : AppLocalizations.of(context)!.scanQrCode,
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     Text(
@@ -145,7 +145,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                                       .capitalize() +
                                   ".."
                               : widget.user.courseName!
-                          : AppLocalizations.of(context).scanQrCode,
+                          : AppLocalizations.of(context)!.scanQrCode,
                       style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ],
@@ -459,7 +459,7 @@ class _NormalQrScreenState extends State<NormalQrScreen>
         children: [
           Text(
             "${infoCurrentPeopleBoxStore.visitorState} " +
-                AppLocalizations.of(context).currentPeople,
+                AppLocalizations.of(context)!.currentPeople,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           SizedBox(
