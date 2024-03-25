@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart';
+import 'package:lead_generation_flutter_app/ui/screens/zebra_scanner.dart';
+import 'package:lead_generation_flutter_app/ui/screens/zebra_scanner_expositor.dart';
 import 'package:provider/provider.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
 import 'package:lead_generation_flutter_app/network/visitors_service.dart';
@@ -13,6 +15,7 @@ import 'package:lead_generation_flutter_app/ui/screens/qr_scan_screen/normal_qr_
 import 'package:lead_generation_flutter_app/utils_backup/custom_colors.dart';
 import 'package:lead_generation_flutter_app/utils_backup/extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../store/dropdown_store/dropdown_store.dart';
 import '../../utils_backup/theme/custom_theme.dart';
@@ -137,7 +140,7 @@ class InitQrScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Text(
               AppLocalizations.of(context)!.scanQrCode,
@@ -153,13 +156,16 @@ class InitQrScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Container(
-              margin: EdgeInsets.all(30),
+              margin: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Center(
                 child: Padding(
                   padding: EdgeInsets.all(0),
                   child: Image.asset(
+                    height: 280,
                     'assets/qrcode.png',
                   ),
                 ),
@@ -188,37 +194,69 @@ class InitQrScreen extends StatelessWidget {
                       ],
                     ),*/
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Container(
                 margin: EdgeInsets.only(left: 20, right: 20),
                 height: 60,
                 width: double.infinity,
                 child: TextButton(
-                    onPressed: (() {
-                      switch (user.userType) {
-                        case 106:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ExpositorQrScreen(
-                                      user: user,
-                                    )),
-                          );
-                          break;
+                    onPressed: (() async {
+                      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                      AndroidDeviceInfo androidInfo =
+                          await deviceInfo.androidInfo;
+                      print(androidInfo.device);
+                      print(androidInfo.brand);
+                      if (androidInfo.brand.toLowerCase() == "zebra") {
+                        switch (user.userType) {
+                          case 106:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ZebraScannerExpositorPage(
+                                        user: user,
+                                      )),
+                            );
+                            break;
 
-                        default:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    NormalQrScreen(
-                                      user: user,
-                                    )),
-                          );
-                          break;
+                          default:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ZebraScannerPage(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+                        }
+                      } else {
+                        switch (user.userType) {
+                          case 106:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ExpositorQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+
+                          default:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      NormalQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+                        }
                       }
+
                       /*if (user!.isAutorizzazione == 0) {
                                 context.pushRoute(QrViewRoute(user: user!));
                               } else {

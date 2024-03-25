@@ -47,9 +47,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             Text(
               widget.user.email,
               style: TextStyle(

@@ -14,6 +14,7 @@ class VivaticketApi {
   static const String _sendOffline = 'SendOffline';
   static const String _setUtenteAppManual = 'Setutenteappmanuale';
   static const String _getUterExtra20 = 'GetUtenteExtraByCode20';
+  static const String _sendOfflineBulk = 'SendOffline';
 
   static String serverName(Envirorment envirorment) {
     if (envirorment == Envirorment.production) {
@@ -61,4 +62,7 @@ class VivaticketApi {
 
   static String REQUEST_SEND_OFFLINE(Envirorment envirorment) =>
       endpoint(envirorment) + _sendOffline;
+
+  static String REQUEST_SEND_OFFLINE_BULK(Envirorment envirorment) =>
+      endpoint(envirorment) + _sendOfflineBulk;
 }
