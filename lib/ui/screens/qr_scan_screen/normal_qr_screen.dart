@@ -155,22 +155,22 @@ class _NormalQrScreenState extends State<NormalQrScreen>
             body: Stack(
               children: [
                 MobileScanner(
-                    allowDuplicates: true,
+                    
                     controller: cameraController,
-                    onDetect: (barcode, args) async {
+                    onDetect: (barcode) async {
                       //cameraController.stop();
                       //cameraController.stop();
-                      if (barcode.rawValue == null) {
+                      if (barcode.raw == null) {
                         debugPrint('Failed to scan Barcode');
                       } else {
-                        final String code = barcode.rawValue!;
+                        final String code = barcode.raw!;
                         if (visibilityStore.isVisible) {
                           if (widget.user.courseName != null) {
-                            if (codiceScan != barcode.rawValue) {
+                            if (codiceScan != barcode.raw) {
                               SVProgressHUD.show();
                               visibilityStore.setSelected(false);
-                              codiceScan = barcode.rawValue!;
-                              lastBarcode = barcode.rawValue!;
+                              codiceScan = barcode.raw!;
+                              lastBarcode = barcode.raw!;
                               SoundHelper.play(0, player);
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {
@@ -214,11 +214,11 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                               SVProgressHUD.dismiss();
                             }
                           } else {
-                            if (codiceScan != barcode.rawValue) {
+                            if (codiceScan != barcode.raw) {
                               SVProgressHUD.show();
                               visibilityStore.setSelected(false);
-                              codiceScan = barcode.rawValue!;
-                              lastBarcode = barcode.rawValue!;
+                              codiceScan = barcode.raw!;
+                              lastBarcode = barcode.raw!;
                               SoundHelper.play(0, player);
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {

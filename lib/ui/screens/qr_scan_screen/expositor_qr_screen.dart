@@ -134,21 +134,21 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
             body: Stack(
               children: [
                 MobileScanner(
-                    allowDuplicates: true,
+                    
                     controller: cameraController,
-                    onDetect: (barcode, args) async {
+                    onDetect: (barcode) async {
                       //cameraController.stop();
                       //cameraController.stop();
-                      if (barcode.rawValue == null) {
+                      if (barcode.raw == null) {
                         debugPrint('Failed to scan Barcode');
                       } else {
-                        if (!barcode.rawValue!.contains("http") &&
-                            !barcode.rawValue!.contains("www")) {
-                          final String code = barcode.rawValue!;
+                        if (!barcode.raw!.contains("http") &&
+                            !barcode.raw!.contains("www")) {
+                          final String code = barcode.raw!;
                           print("TICKET: " + code);
-                          if (codiceScan != barcode.rawValue) {
-                            codiceScan = barcode.rawValue!;
-                            lastBarcode = barcode.rawValue!;
+                          if (codiceScan != barcode.raw) {
+                            codiceScan = barcode.raw!;
+                            lastBarcode = barcode.raw!;
                             SoundHelper.play(0, player);
 
                             //Navigator.pop(context);
