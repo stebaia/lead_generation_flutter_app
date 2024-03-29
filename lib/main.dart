@@ -27,9 +27,12 @@ void main() async {
   if (isUserLogged != false) {
     initialRoute = 'home';
     var user = await DatabaseHelper.instance.getUser();
-    if (user.courseId == 0 || user.courseId == null) {
-      initialRoute = 'choose';
+    if (user.userType != 106) {
+      if (user.courseId == 0 || user.courseId == null) {
+        initialRoute = 'choose';
+      }
     }
+
     runApp(MyAppPage(initialRoute: initialRoute, user: user));
   } else {
     runApp(MyAppPage(

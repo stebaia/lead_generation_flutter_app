@@ -116,6 +116,16 @@ class _LoginScreenState extends State<LoginScreen> {
             ModalRoute.withName('/home'),
           );
           break;
+        case 106:
+          Navigator.pushAndRemoveUntil(
+            buildContext,
+            MaterialPageRoute(
+                builder: (BuildContext context) => HomePageScreen(
+                      user: user,
+                    )),
+            ModalRoute.withName('/home'),
+          );
+          break;
         default:
           Navigator.pushAndRemoveUntil(
             buildContext,

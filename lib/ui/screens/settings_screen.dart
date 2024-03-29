@@ -134,7 +134,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
             )
           : Container(),
       Container(
-        height: 50,
+        height: 60,
         color: themeChange.darkTheme
             ? CupertinoColors.label
             : CupertinoColors.white,
@@ -176,7 +176,7 @@ class _SettingUserScreenState extends State<SettingsScreen> {
       widget.user.userType == 106
           ? GestureDetector(
               child: Container(
-                height: 50,
+                height: 60,
                 color: themeChange.darkTheme
                     ? CupertinoColors.label
                     : CupertinoColors.white,
