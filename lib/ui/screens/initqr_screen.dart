@@ -214,7 +214,7 @@ class InitQrScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      ZebraScannerExpositorPage(
+                                      ExpositorQrScreen(
                                         user: user,
                                       )),
                             );
@@ -225,7 +225,7 @@ class InitQrScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      ZebraScannerPage(
+                                      NormalQrScreen(
                                         user: user,
                                       )),
                             );

@@ -141,13 +141,13 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                       if (barcode.raw == null) {
                         debugPrint('Failed to scan Barcode');
                       } else {
-                        if (!barcode.raw!.contains("http") &&
-                            !barcode.raw!.contains("www")) {
-                          final String code = barcode.raw!;
+                        if (!barcode.raw![0]["rawValue"].contains("http") &&
+                            !barcode.raw![0]["rawValue"].contains("www")) {
+                          final String code = barcode.raw![0]["rawValue"];
                           print("TICKET: " + code);
-                          if (codiceScan != barcode.raw) {
-                            codiceScan = barcode.raw!;
-                            lastBarcode = barcode.raw!;
+                          if (codiceScan != barcode.raw[0]["rawValue"]) {
+                            codiceScan = barcode.raw![0]["rawValue"];
+                            lastBarcode = barcode.raw![0]["rawValue"];
                             SoundHelper.play(0, player);
 
                             //Navigator.pop(context);
