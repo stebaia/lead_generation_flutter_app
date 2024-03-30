@@ -162,14 +162,14 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                       if (barcode.raw == null) {
                         debugPrint('Failed to scan Barcode');
                       } else {
-                        final String code = barcode.raw!;
+                        final String code = barcode.raw![0]["rawValue"];
                         if (visibilityStore.isVisible) {
                           if (widget.user.courseName != null) {
-                            if (codiceScan != barcode.raw) {
+                            if (codiceScan != barcode.raw![0]["rawValue"]) {
                               SVProgressHUD.show();
                               visibilityStore.setSelected(false);
-                              codiceScan = barcode.raw!;
-                              lastBarcode = barcode.raw!;
+                              codiceScan = barcode.raw![0]["rawValue"];
+                              lastBarcode = barcode.raw![0]["rawValue"];
                               SoundHelper.play(0, player);
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {
@@ -216,8 +216,8 @@ class _NormalQrScreenState extends State<NormalQrScreen>
                             if (codiceScan != barcode.raw) {
                               SVProgressHUD.show();
                               visibilityStore.setSelected(false);
-                              codiceScan = barcode.raw!;
-                              lastBarcode = barcode.raw!;
+                              codiceScan = barcode.raw![0]["rawValue"];
+                              lastBarcode = barcode.raw![0]["rawValue"];
                               SoundHelper.play(0, player);
                               //cameraController.stop();
                               if (offlineMode.getOfflineMode) {
