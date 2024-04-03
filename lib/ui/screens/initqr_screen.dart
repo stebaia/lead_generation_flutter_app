@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -202,11 +204,12 @@ class InitQrScreen extends StatelessWidget {
                 width: double.infinity,
                 child: TextButton(
                     onPressed: (() async {
-                      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                      
+                      if(Platform.isAndroid) {
+                        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
                       AndroidDeviceInfo androidInfo =
                           await deviceInfo.androidInfo;
-                      print(androidInfo.device);
-                      print(androidInfo.brand);
+            
                       if (androidInfo.brand.toLowerCase() == "zebra") {
                         switch (user.userType) {
                           case 106:
@@ -256,6 +259,32 @@ class InitQrScreen extends StatelessWidget {
                             break;
                         }
                       }
+                      }else {
+                        switch (user.userType) {
+                          case 106:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ExpositorQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+
+                          default:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      NormalQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+                        }
+                      }
+                      
 
                       /*if (user!.isAutorizzazione == 0) {
                                 context.pushRoute(QrViewRoute(user: user!));
