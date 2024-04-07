@@ -59,6 +59,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
   String visitors = "0";
   bool checkedValuePrivacy = false;
   bool checkedValueCommerical = false;
+  bool enableCamera = true;
 
   VisitorsService visitorsService = VisitorsService();
   HistoryService historyService = HistoryService();
@@ -138,7 +139,8 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                     onDetect: (barcode) async {
                       //cameraController.stop();
                       //cameraController.stop();
-                      if (barcode.raw == null) {
+                      if(enableCamera) {
+if (barcode.raw == null) {
                         debugPrint('Failed to scan Barcode');
                       } else {
                         if (!barcode.raw![0]["rawValue"].contains("http") &&
@@ -149,7 +151,10 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                             codiceScan = barcode.raw![0]["rawValue"];
                             lastBarcode = barcode.raw![0]["rawValue"];
                             SoundHelper.play(0, player);
-
+                            //cameraController.stop();
+                            setState(() {
+                              enableCamera = false;
+                            });
                             //Navigator.pop(context);
                             Navigator.push(
                                 context,
@@ -159,7 +164,11 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                           user: widget.user,
                                           isNew: false,
                                           codice20: codiceScan,
-                                        ))));
+                                        )))).then((value) {
+                                          setState(() {
+                                            enableCamera = true;
+                                          });
+                                        });
 
                             //visibilityStore.setSelected(false);
 
@@ -169,6 +178,8 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                           }
                         }
                       }
+                      }
+                      
                     }),
                 Observer(
                     builder: ((context) => Visibility(
