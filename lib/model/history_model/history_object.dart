@@ -86,9 +86,14 @@ class HistoryResult {
   HistoryResult.fromJson(Map<String, dynamic> json) {
     if (json['Valori3Stringhe'] != null) {
       valori3Stringhe = <Valori3Stringhe>[];
-      json['Valori3Stringhe'].forEach((v) {
+      if(json['Valori3Stringhe'] is List){
+        json['Valori3Stringhe'].forEach((v) {
         valori3Stringhe!.add(new Valori3Stringhe.fromJson(v));
       });
+      }else {
+        valori3Stringhe!.add(Valori3Stringhe.fromJson(json['Valori3Stringhe']));
+      }
+     
     }
   }
 

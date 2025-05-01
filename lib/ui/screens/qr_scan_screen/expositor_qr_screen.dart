@@ -20,17 +20,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
-import 'package:lead_generation_flutter_app/utils/envirorment.dart';
-import 'package:lead_generation_flutter_app/utils/extension.dart';
-import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
-import 'package:lead_generation_flutter_app/utils/sound_play.dart';
-import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';
+import 'package:lead_generation_flutter_app/utils_backup/extension.dart';
+import 'package:lead_generation_flutter_app/utils_backup/sound_helper.dart';
+import 'package:lead_generation_flutter_app/utils_backup/sound_play.dart';
+import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 
 import '../../../model/user_model/user.dart';
 import '../../../network/visitors_service.dart';
 import '../../../provider/dark_theme_provider.dart';
 import '../../../provider/envirorment_provider.dart';
-import '../../../utils/scanner_animations.dart';
+import '../../../utils_backup/scanner_animations.dart';
 
 class ExpositorQrScreen extends StatefulWidget {
   ExpositorQrScreen({Key? key, required this.user}) : super(key: key);
@@ -59,6 +59,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
   String visitors = "0";
   bool checkedValuePrivacy = false;
   bool checkedValueCommerical = false;
+  bool enableCamera = true;
 
   VisitorsService visitorsService = VisitorsService();
   HistoryService historyService = HistoryService();
@@ -114,7 +115,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                     .capitalize() +
                                 ".."
                             : widget.user.manifestationName!.capitalize()
-                        : AppLocalizations.of(context).scanQrCode,
+                        : AppLocalizations.of(context)!.scanQrCode,
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   Text(
@@ -125,7 +126,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                     .capitalize() +
                                 ".."
                             : widget.user.courseName!.capitalize()
-                        : AppLocalizations.of(context).scanQrCode,
+                        : AppLocalizations.of(context)!.scanQrCode,
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
@@ -134,21 +135,27 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
             body: Stack(
               children: [
                 MobileScanner(
-                    allowDuplicates: true,
                     controller: cameraController,
-                    onDetect: (barcode, args) async {
+                    onDetect: (barcode) async {
                       //cameraController.stop();
                       //cameraController.stop();
-                      if (barcode.rawValue == null) {
+                      if(enableCamera) {
+if (barcode.raw == null) {
                         debugPrint('Failed to scan Barcode');
                       } else {
-                        final String code = barcode.rawValue!;
-                        if (codiceScan != barcode.rawValue) {
-                          codiceScan = barcode.rawValue!;
-                          lastBarcode = barcode.rawValue!;
-                          SoundHelper.play(0, player);
-                          
-                            Navigator.pop(context);
+                        if (!barcode.raw![0]["rawValue"].contains("http") &&
+                            !barcode.raw![0]["rawValue"].contains("www")) {
+                          final String code = barcode.raw![0]["rawValue"];
+                          print("TICKET: " + code);
+                          if (codiceScan != barcode.raw[0]["rawValue"]) {
+                            codiceScan = barcode.raw![0]["rawValue"];
+                            lastBarcode = barcode.raw![0]["rawValue"];
+                            SoundHelper.play(0, player);
+                            //cameraController.stop();
+                            setState(() {
+                              enableCamera = false;
+                            });
+                            //Navigator.pop(context);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -157,15 +164,22 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                                           user: widget.user,
                                           isNew: false,
                                           codice20: codiceScan,
-                                        ))));
-                          
-                          //visibilityStore.setSelected(false);
+                                        )))).then((value) {
+                                          setState(() {
+                                            enableCamera = true;
+                                          });
+                                        });
 
-                          //cameraController.stop();
+                            //visibilityStore.setSelected(false);
 
-                          debugPrint('Barcode found! $code');
+                            //cameraController.stop();
+
+                            debugPrint('Barcode found! $code');
+                          }
                         }
                       }
+                      }
+                      
                     }),
                 Observer(
                     builder: ((context) => Visibility(
@@ -242,7 +256,7 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
       width: 220,
       child: Center(
         child: Text(
-          AppLocalizations.of(context).scan,
+          AppLocalizations.of(context)!.scan,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -269,7 +283,6 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                     children: [
                       CheckboxListTile(
                           side: BorderSide(color: anotherColor),
-                          
                           title: Text(
                             "Acconsenti al trattamento della privacy",
                             style: TextStyle(fontSize: 12),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
-import 'package:lead_generation_flutter_app/utils/csv_exporter.dart';
+import 'package:lead_generation_flutter_app/utils_backup/csv_exporter.dart';
 
 import '../../model/expositor_mapper/expositor_mapper.dart';
 import '../../model/expositor_model/expositor_model.dart';
@@ -11,7 +11,7 @@ import '../../model/user_model/user.dart';
 import '../../network/get_users_extra_service.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../provider/envirorment_provider.dart';
-import '../../utils/theme/custom_theme.dart';
+import '../../utils_backup/theme/custom_theme.dart';
 
 class ExpositorsScreen extends StatefulWidget {
   const ExpositorsScreen({Key? key, required this.user}) : super(key: key);
@@ -125,7 +125,9 @@ class _ExpositorListScreenState extends State<ExpositorsScreen> {
                                       int.parse(expositorList[index].idextra!),
                                 ),
                               ),
-                            )
+                            ).then((value) {
+                              setState(() {});
+                            })
                           },
                         ));
                   });

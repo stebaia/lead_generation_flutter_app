@@ -1,6 +1,6 @@
 import 'package:lead_generation_flutter_app/model/visitor_model/visitors_object.dart';
 import 'package:lead_generation_flutter_app/network/vivaticket_api.dart';
-import 'package:lead_generation_flutter_app/utils/envirorment.dart';
+import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';
 import 'package:xml2json/xml2json.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';

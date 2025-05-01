@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -98,9 +97,9 @@ class DatabaseHelper {
     return await database.insert('offlineScan', offlineScan.toMap());
   }
 
-  Future<int> deleteOfflineScan(int id) async {
+  Future<int> deleteOfflineScan(String codice) async {
     Database database = await instance.database;
     return await database
-        .delete('offlineScan', where: 'idManifestazione = ?', whereArgs: [id]);
+        .delete('offlineScan', where: 'codice = ?', whereArgs: [codice]);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:lead_generation_flutter_app/utils/envirorment.dart';
+import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';
 
 class VivaticketApi {
   static const String _protocol = 'https';
@@ -7,11 +7,14 @@ class VivaticketApi {
   static const String _getCourses = 'GetCorsi';
   static const String _checkManager = 'CheckManager';
   static const String _historyQrScan = 'History';
+  static const String _historyCaScan = 'Historyca';
   static const String _getUsersExtra = 'GetUsersExtra';
   static const String _getUserExtra = 'GetUtenteExtra';
   static const String _setUtenteApp = 'Setutenteapp';
+  static const String _sendOffline = 'SendOffline';
   static const String _setUtenteAppManual = 'Setutenteappmanuale';
   static const String _getUterExtra20 = 'GetUtenteExtraByCode20';
+  static const String _sendOfflineBulk = 'SendOffline';
 
   static String serverName(Envirorment envirorment) {
     if (envirorment == Envirorment.production) {
@@ -39,6 +42,9 @@ class VivaticketApi {
   static String REQUEST_HISTORY_SCAN(Envirorment envirorment) =>
       endpoint(envirorment) + _historyQrScan;
 
+  static String REQUEST_HISTORYCA_SCAN(Envirorment envirorment) =>
+      endpoint(envirorment) + _historyCaScan;
+
   static String REQUEST_GET_USERS_EXTRA(Envirorment envirorment) =>
       endpoint(envirorment) + _getUsersExtra;
 
@@ -53,4 +59,10 @@ class VivaticketApi {
 
   static String REQUEST_SET_UTENTE_APP_MANUAL(Envirorment envirorment) =>
       endpoint(envirorment) + _setUtenteApp;
+
+  static String REQUEST_SEND_OFFLINE(Envirorment envirorment) =>
+      endpoint(envirorment) + _sendOffline;
+
+  static String REQUEST_SEND_OFFLINE_BULK(Envirorment envirorment) =>
+      endpoint(envirorment) + _sendOfflineBulk;
 }

@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:lead_generation_flutter_app/model/response_logut_model/response_logout_model.dart';
 import 'package:lead_generation_flutter_app/network/vivaticket_api.dart';
-import 'package:lead_generation_flutter_app/utils/envirorment.dart';
+import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';
 import 'package:xml/xml.dart';
 import 'package:xml2json/xml2json.dart';
 import 'dart:convert';

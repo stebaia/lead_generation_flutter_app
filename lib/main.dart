@@ -11,7 +11,7 @@ import 'package:lead_generation_flutter_app/ui/screens/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:lead_generation_flutter_app/utils/theme/custom_theme.dart';
+import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 
 import 'model/user_model/user.dart';
 
@@ -27,9 +27,12 @@ void main() async {
   if (isUserLogged != false) {
     initialRoute = 'home';
     var user = await DatabaseHelper.instance.getUser();
-    if (user.courseId == 0 || user.courseId == null) {
-      initialRoute = 'choose';
+    if (user.userType != 106) {
+      if (user.courseId == 0 || user.courseId == null) {
+        initialRoute = 'choose';
+      }
     }
+
     runApp(MyAppPage(initialRoute: initialRoute, user: user));
   } else {
     runApp(MyAppPage(
@@ -72,6 +75,12 @@ class _MyAppState extends State<MyAppPage> {
         await offlineModeProvider.envirormentPreferences.getMode();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    getCurrentAppTheme();
+  }
+
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
@@ -93,7 +102,7 @@ class _MyAppState extends State<MyAppPage> {
             Locale('en', ''), // English, no country code
             Locale('it', ''), // Spanish, no country code
           ],
-          title: 'TicketManager',
+          title: 'LeadGenerationApp',
           theme: ThemeHelper.myThemeData(themeProvider.darkTheme, context),
           initialRoute: widget.initialRoute,
           routes: {

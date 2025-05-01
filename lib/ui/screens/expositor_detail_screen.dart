@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -16,12 +18,12 @@ import 'package:lead_generation_flutter_app/provider/envirorment_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/store/selected_item_store/selected_item_store.dart';
 import 'package:lead_generation_flutter_app/store/visibility_store/visibility_store.dart';
-import 'package:lead_generation_flutter_app/utils/nations_utils.dart';
+import 'package:lead_generation_flutter_app/utils_backup/nations_utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../provider/dark_theme_provider.dart';
-import '../../utils/custom_colors.dart';
-import '../../utils/envirorment.dart';
-import '../../utils/province_utils.dart';
+import '../../utils_backup/custom_colors.dart';
+import '../../utils_backup/envirorment.dart';
+import '../../utils_backup/province_utils.dart';
 import '../components/take_picture.dart';
 
 class ExpositorDetailScreen extends StatefulWidget {
@@ -112,12 +114,17 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                     expositorMapperData.siglaprovincia!)
                 .name;
           }
-          if(expositorMapperData.valore != null){
+          if (expositorMapperData.valore != null) {
             star = double.parse(expositorMapperData.valore!);
           }
           selectedItemyStoreNation.setSelectedItem(selectedValue);
           selectedItemyStoreProvince.setSelectedItem(selectedValueProvince);
         }
+      }).onError((error, stackTrace) {
+        Fluttertoast.showToast(msg: "Ticket non trovato");
+        Timer.periodic(Duration(seconds: 3), (timer) {
+          Navigator.pop(context);
+        });
       });
     } else {
       selectedValue = "Italia";
@@ -144,7 +151,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                 themeChange.darkTheme ? Colors.black : Colors.white,
             appBar: AppBar(
               title: Text(
-                AppLocalizations.of(context).expositorData,
+                AppLocalizations.of(context)!.expositorData,
                 style: TextStyle(
                   color: themeChange.darkTheme ? Colors.white : Colors.black,
                 ),
@@ -164,7 +171,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         ),
                         textFieldForm(
                             textEditingControllerSocialRegion,
-                            AppLocalizations.of(context).socialRegion,
+                            AppLocalizations.of(context)!.socialRegion,
                             1,
                             themeChange.darkTheme
                                 ? Colors.white
@@ -174,7 +181,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         ),
                         textFieldForm(
                             textEditingControllerSurname,
-                            AppLocalizations.of(context).surname,
+                            AppLocalizations.of(context)!.surname,
                             1,
                             themeChange.darkTheme
                                 ? Colors.white
@@ -184,7 +191,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         ),
                         textFieldForm(
                             textEditingControllerName,
-                            AppLocalizations.of(context).name,
+                            AppLocalizations.of(context)!.name,
                             1,
                             themeChange.darkTheme
                                 ? Colors.white
@@ -194,7 +201,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         ),
                         textFieldForm(
                             textEditingControllerEmail,
-                            AppLocalizations.of(context).email,
+                            AppLocalizations.of(context)!.email,
                             1,
                             themeChange.darkTheme
                                 ? Colors.white
@@ -204,7 +211,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         ),
                         textFieldForm(
                             textEditingControllerPhone,
-                            AppLocalizations.of(context).telephone,
+                            AppLocalizations.of(context)!.telephone,
                             1,
                             themeChange.darkTheme
                                 ? Colors.white
@@ -214,7 +221,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         ),
                         textFieldForm(
                             textEditingControllerCap,
-                            AppLocalizations.of(context).cap,
+                            AppLocalizations.of(context)!.cap,
                             1,
                             themeChange.darkTheme
                                 ? Colors.white
@@ -232,7 +239,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                               children: [
                                 Align(
                                   child: Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                         .expositorLocalizationData,
                                     style: TextStyle(
                                         fontSize: 12,
@@ -254,7 +261,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                             child: Row(
                                               children: [
                                                 Text(
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                       .nation,
                                                   style: TextStyle(
                                                       fontSize: 12,
@@ -277,41 +284,50 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                             ),
                                           ),
                                         )),
-                                    GestureDetector(
-                                        onTap: () => showPickerProvince(),
-                                        child: Container(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 20,
-                                                top: 12,
-                                                bottom: 12,
-                                                right: 20),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  AppLocalizations.of(context)
-                                                      .province,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: CupertinoColors
-                                                          .systemGrey),
+                                    Observer(builder: (context) {
+                                      return selectedItemyStoreNation
+                                                  .selectedItem ==
+                                              "Italia"
+                                          ? GestureDetector(
+                                              onTap: () => showPickerProvince(),
+                                              child: Container(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 20,
+                                                      top: 12,
+                                                      bottom: 12,
+                                                      right: 20),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .province,
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                CupertinoColors
+                                                                    .systemGrey),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Observer(
+                                                          builder: ((context) =>
+                                                              Text(selectedItemyStoreProvince
+                                                                  .selectedItem!))),
+                                                      Spacer(),
+                                                      Icon(
+                                                        CupertinoIcons
+                                                            .chevron_down,
+                                                        //color: ThemeHelper.primaryColor,
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Observer(
-                                                    builder: ((context) => Text(
-                                                        selectedItemyStoreProvince
-                                                            .selectedItem!))),
-                                                Spacer(),
-                                                Icon(
-                                                  CupertinoIcons.chevron_down,
-                                                  //color: ThemeHelper.primaryColor,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        )),
+                                              ))
+                                          : Container();
+                                    })
                                   ],
                                 )
                               ],
@@ -321,7 +337,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                         ),
                         textFieldForm(
                             textEditingControllerNote,
-                            AppLocalizations.of(context).notes,
+                            AppLocalizations.of(context)!.notes,
                             5,
                             themeChange.darkTheme
                                 ? Colors.white
@@ -380,7 +396,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  AppLocalizations.of(context).doValutation,
+                                  AppLocalizations.of(context)!.doValutation,
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: CupertinoColors.systemGrey),
@@ -404,7 +420,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                       EdgeInsets.symmetric(horizontal: 4.0),
                                   itemBuilder: (context, _) => Icon(
                                     CupertinoIcons.star_fill,
-                                    color: Colors.orange,
+                                    color: Colors.green,
                                   ),
                                   onRatingUpdate: (rating) {
                                     print(rating);
@@ -423,7 +439,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                           child: MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18)),
-                            color: Colors.orange,
+                            color: Colors.green,
                             textColor: Colors.white,
                             height: 46,
                             minWidth: MediaQuery.of(context).size.width,
@@ -439,8 +455,11 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                       textEditingControllerEmail.text,
                                       NationsUtils.getInitialsFromNation(
                                           selectedValue),
-                                      ProvinceUtils.getInitialsFromProvince(
-                                          selectedValueProvince),
+                                      selectedValueProvince != ""
+                                          ? ProvinceUtils
+                                              .getInitialsFromProvince(
+                                                  selectedValueProvince)
+                                          : "",
                                       textEditingControllerName.text,
                                       textEditingControllerSurname.text,
                                       textEditingControllerPhone.text,
@@ -456,7 +475,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                             Navigator.pop(context),
                                             Fluttertoast.showToast(
                                                 msg: AppLocalizations.of(
-                                                        context)
+                                                        context)!
                                                     .contentToastSetUtenteOk,
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.BOTTOM,
@@ -472,7 +491,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                             SVProgressHUD.dismiss(),
                                             Fluttertoast.showToast(
                                                 msg: AppLocalizations.of(
-                                                        context)
+                                                        context)!
                                                     .contentToastSetUtenteko,
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.BOTTOM,
@@ -487,7 +506,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                   .onError((error, stackTrace) {
                                 SVProgressHUD.dismiss();
                                 Fluttertoast.showToast(
-                                    msg: AppLocalizations.of(context)
+                                    msg: AppLocalizations.of(context)!
                                         .contentToastSetUtenteko,
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
@@ -499,7 +518,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                               });
                             },
                             child: Text(
-                                AppLocalizations.of(context).saveExpositor),
+                                AppLocalizations.of(context)!.saveExpositor),
                           ),
                           padding: EdgeInsets.all(8),
                         ),
@@ -518,11 +537,11 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
     await showCupertinoDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-              title: Text(AppLocalizations.of(context).cancelExpositor),
+              title: Text(AppLocalizations.of(context)!.cancelExpositor),
               actions: <Widget>[
                 CupertinoButton(
                   child: Text(
-                    AppLocalizations.of(context).yes,
+                    AppLocalizations.of(context)!.yes,
                     style: TextStyle(color: CupertinoColors.systemRed),
                   ),
                   onPressed: () {
@@ -532,7 +551,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                 ),
                 CupertinoButton(
                   child: Text(
-                    AppLocalizations.of(context).no,
+                    AppLocalizations.of(context)!.no,
                     style: TextStyle(color: Colors.green),
                   ),
                   onPressed: () {
@@ -548,10 +567,11 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
       String label, int lines, Color borderColor) {
     return TextField(
         minLines: lines,
+        style: TextStyle(color: borderColor),
         maxLines: lines,
         controller: textEditingController,
         decoration: InputDecoration(
-            labelStyle: TextStyle(color: Colors.orange),
+            labelStyle: TextStyle(color: Colors.green),
             enabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: borderColor)),
             border: OutlineInputBorder(),

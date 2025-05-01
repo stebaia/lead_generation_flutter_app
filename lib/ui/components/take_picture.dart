@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/theme/custom_theme.dart';
+import '../../utils_backup/theme/custom_theme.dart';
 
 class TakePictureWidget extends StatefulWidget {
   const TakePictureWidget({Key? key, required this.onTakedPicture})

@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:http/http.dart';
+import 'package:lead_generation_flutter_app/ui/screens/zebra_scanner.dart';
+import 'package:lead_generation_flutter_app/ui/screens/zebra_scanner_expositor.dart';
 import 'package:provider/provider.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
 import 'package:lead_generation_flutter_app/network/visitors_service.dart';
@@ -10,12 +14,13 @@ import 'package:lead_generation_flutter_app/provider/envirorment_provider.dart';
 import 'package:lead_generation_flutter_app/ui/screens/choose_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/qr_scan_screen/expositor_qr_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/qr_scan_screen/normal_qr_screen.dart';
-import 'package:lead_generation_flutter_app/utils/custom_colors.dart';
-import 'package:lead_generation_flutter_app/utils/extension.dart';
+import 'package:lead_generation_flutter_app/utils_backup/custom_colors.dart';
+import 'package:lead_generation_flutter_app/utils_backup/extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../store/dropdown_store/dropdown_store.dart';
-import '../../utils/theme/custom_theme.dart';
+import '../../utils_backup/theme/custom_theme.dart';
 
 class InitQrScreen extends StatelessWidget {
   InitQrScreen({Key? key, required this.user}) : super(key: key);
@@ -65,7 +70,8 @@ class InitQrScreen extends StatelessWidget {
                           child: Text(
                             user.manifestationName!.capitalize(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
                         ),
                         user.courseName != null
@@ -92,7 +98,7 @@ class InitQrScreen extends StatelessWidget {
                                     visitors = snapshot.data as int;
                                     return Text(
                                       "$visitors " +
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .currentPeople,
                                       style: TextStyle(
                                           fontSize: 18,
@@ -127,7 +133,8 @@ class InitQrScreen extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
                       ),
                     )
                   ],
@@ -135,35 +142,38 @@ class InitQrScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Text(
-              AppLocalizations.of(context).scanQrCode,
+              AppLocalizations.of(context)!.scanQrCode,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   color: themeChange.darkTheme ? Colors.white : Colors.black),
             ),
             Text(
-              AppLocalizations.of(context).tap_the_button,
+              AppLocalizations.of(context)!.tap_the_button,
               style: TextStyle(
                   color: themeChange.darkTheme ? Colors.white : Colors.black),
               textAlign: TextAlign.center,
             ),
             Container(
-              margin: EdgeInsets.all(30),
+              margin: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(20)),
               child: Center(
                 child: Padding(
                   padding: EdgeInsets.all(0),
                   child: Image.asset(
+                    height: 280,
                     'assets/qrcode.png',
                   ),
                 ),
               ),
             ),
-    
+
             /*Row(
                     
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,36 +196,96 @@ class InitQrScreen extends StatelessWidget {
                       ],
                     ),*/
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Container(
                 margin: EdgeInsets.only(left: 20, right: 20),
                 height: 60,
                 width: double.infinity,
                 child: TextButton(
-                    onPressed: (() {
-                      switch (user.userType) {
-                        case 106:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ExpositorQrScreen(
-                                      user: user,
-                                    )),
-                          );
-                          break;
-    
-                        default:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => NormalQrScreen(
-                                      user: user,
-                                    )),
-                          );
-                          break;
+                    onPressed: (() async {
+                      
+                      if(Platform.isAndroid) {
+                        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                      AndroidDeviceInfo androidInfo =
+                          await deviceInfo.androidInfo;
+            
+                      if (androidInfo.brand.toLowerCase() == "zebra") {
+                        switch (user.userType) {
+                          case 106:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ZebraScannerExpositorPage(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+
+                          default:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ZebraScannerPage(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+                        }
+                      } else {
+                        switch (user.userType) {
+                          case 106:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ExpositorQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+
+                          default:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      NormalQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+                        }
                       }
+                      }else {
+                        switch (user.userType) {
+                          case 106:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ExpositorQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+
+                          default:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      NormalQrScreen(
+                                        user: user,
+                                      )),
+                            );
+                            break;
+                        }
+                      }
+                      
+
                       /*if (user!.isAutorizzazione == 0) {
                                 context.pushRoute(QrViewRoute(user: user!));
                               } else {
@@ -224,11 +294,11 @@ class InitQrScreen extends StatelessWidget {
                               }*/
                     }),
                     style: TextButton.styleFrom(
-                      primary: Colors.white,
+                      foregroundColor: Colors.white,
                       backgroundColor: PrimaryColor,
                     ),
                     child: Text(
-                      AppLocalizations.of(context).scan_exclamative,
+                      AppLocalizations.of(context)!.scan_exclamative,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
