@@ -4,16 +4,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 //import 'package:external_path/external_path.dart';
 import 'package:csv/csv.dart';
-import 'package:flutter_share/flutter_share.dart';
 import '../model/expositor_mapper/expositor_mapper.dart';
 
 class CsvExporter {
   Future<void> shareFile(String path) async {
-    await FlutterShare.shareFile(
+    /*await FlutterShare.shareFile(
       title: 'Example share',
       text: 'Example share text',
       filePath: path,
-    );
+    );*/
   }
 
   void generateCsvFile(List<ExpoisitorMapper> expositors) async {

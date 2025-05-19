@@ -12,16 +12,17 @@ class ThemeHelper {
         fontFamily: 'Poppins',
         primaryColor: primaryColor,
         textTheme: myTextTheme(isDarkTheme, buildContext),
-        backgroundColor: isDarkTheme ? backgroundDark : background);
+        colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light());
   }
 
   static TextTheme myTextTheme(bool isDarkTheme, BuildContext context) {
     return TextTheme(
-      bodyText1: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
-      headline1: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
-      headline2: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
-      bodyText2: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
-      subtitle1: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+      bodyLarge: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+      displayLarge: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+      displayMedium:
+          TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+      bodyMedium: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+      titleMedium: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
     );
   }
 }

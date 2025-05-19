@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_generation_flutter_app/network/history_without_course_service.dart';

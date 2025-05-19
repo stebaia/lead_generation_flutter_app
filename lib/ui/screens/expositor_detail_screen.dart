@@ -6,7 +6,6 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:lead_generation_flutter_app/model/expositor_mapper/expositor_mapper.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
@@ -15,7 +14,7 @@ import 'package:lead_generation_flutter_app/network/get_user_extra_service.dart'
 import 'package:lead_generation_flutter_app/network/set_utente_app.dart';
 import 'package:lead_generation_flutter_app/network/set_utente_app_manual_service.dart';
 import 'package:lead_generation_flutter_app/provider/envirorment_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/store/selected_item_store/selected_item_store.dart';
 import 'package:lead_generation_flutter_app/store/visibility_store/visibility_store.dart';
 import 'package:lead_generation_flutter_app/utils_backup/nations_utils.dart';
@@ -121,10 +120,10 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
           selectedItemyStoreProvince.setSelectedItem(selectedValueProvince);
         }
       }).onError((error, stackTrace) {
-        Fluttertoast.showToast(msg: "Ticket non trovato");
+        /*Fluttertoast.showToast(msg: "Ticket non trovato");
         Timer.periodic(Duration(seconds: 3), (timer) {
           Navigator.pop(context);
-        });
+        });*/
       });
     } else {
       selectedValue = "Italia";
@@ -473,7 +472,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                           {
                                             SVProgressHUD.dismiss(),
                                             Navigator.pop(context),
-                                            Fluttertoast.showToast(
+                                            /* Fluttertoast.showToast(
                                                 msg: AppLocalizations.of(
                                                         context)!
                                                     .contentToastSetUtenteOk,
@@ -484,12 +483,12 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                                     CupertinoColors.black,
                                                 textColor:
                                                     CupertinoColors.white,
-                                                fontSize: 16.0),
+                                                fontSize: 16.0),*/
                                           }
                                         else
                                           {
                                             SVProgressHUD.dismiss(),
-                                            Fluttertoast.showToast(
+                                            /*Fluttertoast.showToast(
                                                 msg: AppLocalizations.of(
                                                         context)!
                                                     .contentToastSetUtenteko,
@@ -500,12 +499,12 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                                     CupertinoColors.systemRed,
                                                 textColor:
                                                     CupertinoColors.white,
-                                                fontSize: 16.0),
+                                                fontSize: 16.0),*/
                                           }
                                       })
                                   .onError((error, stackTrace) {
                                 SVProgressHUD.dismiss();
-                                Fluttertoast.showToast(
+                                /*Fluttertoast.showToast(
                                     msg: AppLocalizations.of(context)!
                                         .contentToastSetUtenteko,
                                     toastLength: Toast.LENGTH_SHORT,
@@ -513,7 +512,7 @@ class _ExpositorDetailScreenState extends State<ExpositorDetailScreen> {
                                     timeInSecForIosWeb: 1,
                                     backgroundColor: CupertinoColors.systemRed,
                                     textColor: CupertinoColors.white,
-                                    fontSize: 16.0);
+                                    fontSize: 16.0);*/
                                 return Future.value();
                               });
                             },

@@ -16,7 +16,7 @@ import 'package:lead_generation_flutter_app/store/enable_store/enable_store.dart
 import 'package:lead_generation_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
 import 'package:lead_generation_flutter_app/store/normalScan_store/normalScan_store.dart';
 import 'package:lead_generation_flutter_app/store/visibility_store/visibility_store.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
@@ -139,47 +139,46 @@ class _ExpositorQrScreenState extends State<ExpositorQrScreen>
                     onDetect: (barcode) async {
                       //cameraController.stop();
                       //cameraController.stop();
-                      if(enableCamera) {
-if (barcode.raw == null) {
-                        debugPrint('Failed to scan Barcode');
-                      } else {
-                        if (!barcode.raw![0]["rawValue"].contains("http") &&
-                            !barcode.raw![0]["rawValue"].contains("www")) {
-                          final String code = barcode.raw![0]["rawValue"];
-                          print("TICKET: " + code);
-                          if (codiceScan != barcode.raw[0]["rawValue"]) {
-                            codiceScan = barcode.raw![0]["rawValue"];
-                            lastBarcode = barcode.raw![0]["rawValue"];
-                            SoundHelper.play(0, player);
-                            //cameraController.stop();
-                            setState(() {
-                              enableCamera = false;
-                            });
-                            //Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: ((context) =>
-                                        ExpositorDetailScreen(
-                                          user: widget.user,
-                                          isNew: false,
-                                          codice20: codiceScan,
-                                        )))).then((value) {
-                                          setState(() {
-                                            enableCamera = true;
-                                          });
-                                        });
+                      if (enableCamera) {
+                        if (barcode.raw == null) {
+                          debugPrint('Failed to scan Barcode');
+                        } else {
+                          if (!barcode.raw![0]["rawValue"].contains("http") &&
+                              !barcode.raw![0]["rawValue"].contains("www")) {
+                            final String code = barcode.raw![0]["rawValue"];
+                            print("TICKET: " + code);
+                            if (codiceScan != barcode.raw[0]["rawValue"]) {
+                              codiceScan = barcode.raw![0]["rawValue"];
+                              lastBarcode = barcode.raw![0]["rawValue"];
+                              SoundHelper.play(0, player);
+                              //cameraController.stop();
+                              setState(() {
+                                enableCamera = false;
+                              });
+                              //Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          ExpositorDetailScreen(
+                                            user: widget.user,
+                                            isNew: false,
+                                            codice20: codiceScan,
+                                          )))).then((value) {
+                                setState(() {
+                                  enableCamera = true;
+                                });
+                              });
 
-                            //visibilityStore.setSelected(false);
+                              //visibilityStore.setSelected(false);
 
-                            //cameraController.stop();
+                              //cameraController.stop();
 
-                            debugPrint('Barcode found! $code');
+                              debugPrint('Barcode found! $code');
+                            }
                           }
                         }
                       }
-                      }
-                      
                     }),
                 Observer(
                     builder: ((context) => Visibility(

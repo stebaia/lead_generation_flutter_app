@@ -14,7 +14,7 @@ import 'package:lead_generation_flutter_app/network/history_service.dart';
 import 'package:lead_generation_flutter_app/store/infoCurrentPeopleBox_store/infoCurrentPeopleBox_store.dart';
 import 'package:lead_generation_flutter_app/store/normalScan_store/normalScan_store.dart';
 import 'package:lead_generation_flutter_app/store/visibility_store/visibility_store.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/ui/components/history_modal.dart';
 import 'package:lead_generation_flutter_app/ui/screens/expositors_screen.dart';
 import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';

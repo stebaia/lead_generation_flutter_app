@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lead_generation_flutter_app/db/database_helper.dart';
 import 'package:lead_generation_flutter_app/ui/screens/zebra_scanner_expositor.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/model/scan_offline.dart';
 import 'package:lead_generation_flutter_app/network/logout_service.dart';
 import 'package:lead_generation_flutter_app/network/send_code_offline_service.dart';
@@ -393,15 +392,15 @@ class _SettingUserScreenState extends State<SettingsScreen> {
                             envirormentProvider.envirormentState);
                         await DatabaseHelper.instance
                             .deleteOfflineScan(scan.codice)
-                            .then((value) => Fluttertoast.showToast(
-                                msg:
-                                    "Scannerizzazione con codice ${scan.codice} inviata correttamente"))
-                            .onError((error, stackTrace) {
-                          Fluttertoast.showToast(
+                            .then((value) {
+                          /*Fluttertoast.showToast(
+                              msg:
+                                  "Scannerizzazione con codice ${scan.codice} inviata correttamente");*/
+                        }).onError((error, stackTrace) {
+                          /*Fluttertoast.showToast(
                               backgroundColor: Colors.red,
                               msg:
-                                  "Errore nell'invio della scannerizzazione con codice ${scan.codice}");
-                          return Future<bool>.value(true);
+                                  "Errore nell'invio della scannerizzazione con codice ${scan.codice}");*/
                         });
                       }
                       Navigator.pop(context);

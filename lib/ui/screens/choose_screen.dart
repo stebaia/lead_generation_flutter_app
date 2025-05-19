@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:lead_generation_flutter_app/model/id_value_model.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
@@ -15,7 +14,7 @@ import 'package:lead_generation_flutter_app/ui/screens/home_screen.dart';
 import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 
 import '../../db/database_helper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 
 import '../../model/course_model/course.dart';
 import '../../network/course_service.dart';
@@ -60,7 +59,7 @@ class ChooseScreen extends StatelessWidget {
             ),
           ),
         ),
-        body: user!.userType != 106
+        body: user!.userType != 106 || user!.userType == 110
             ? FutureBuilder(
                 future: getCourses(user!, envirormentProvider),
                 builder: ((context, snapshot) {
@@ -308,8 +307,7 @@ class ChooseScreen extends StatelessWidget {
         .map((e) => DropdownMenuItem(
               value: e,
               child: Container(
-                  height: 80,
-                  margin: EdgeInsets.all(4),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -318,12 +316,6 @@ class ChooseScreen extends StatelessWidget {
                     e.id > -1
                         ? SizedBox(
                             width: 10,
-                          )
-                        : Container(),
-                    e.id > -1
-                        ? Icon(
-                            Icons.more_vert,
-                            color: Colors.black26,
                           )
                         : Container(),
                     e.id > -1

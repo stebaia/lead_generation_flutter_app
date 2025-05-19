@@ -17,7 +17,7 @@ import 'package:lead_generation_flutter_app/ui/screens/expositor_detail_screen.d
 import 'package:lead_generation_flutter_app/utils/extension.dart';
 import 'package:lead_generation_flutter_app/utils/sound_helper.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/model/user_model/user.dart';
 import 'package:lead_generation_flutter_app/network/history_service.dart';
 import 'package:lead_generation_flutter_app/network/visitors_service.dart';

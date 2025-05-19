@@ -4,7 +4,6 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lead_generation_flutter_app/network/login_service.dart';
 import 'package:lead_generation_flutter_app/provider/dark_theme_provider.dart';
 import 'package:lead_generation_flutter_app/provider/envirorment_provider.dart';
@@ -12,7 +11,7 @@ import 'package:lead_generation_flutter_app/ui/components/bazier_container.dart'
 import 'package:lead_generation_flutter_app/ui/screens/choose_screen.dart';
 import 'package:lead_generation_flutter_app/ui/screens/home_screen.dart';
 import 'package:lead_generation_flutter_app/utils_backup/custom_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:lead_generation_flutter_app/utils_backup/envirorment.dart';
 import 'package:lead_generation_flutter_app/utils_backup/theme/custom_theme.dart';
 import '../../db/database_helper.dart';
@@ -139,10 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }).onError((error, stackTrace) {
       SVProgressHUD.dismiss();
-      Fluttertoast.showToast(
-          msg: 'Credenziali non valide',
-          textColor: Colors.white,
-          backgroundColor: Colors.red);
     });
   }
 

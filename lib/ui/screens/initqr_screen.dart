@@ -16,7 +16,7 @@ import 'package:lead_generation_flutter_app/ui/screens/qr_scan_screen/expositor_
 import 'package:lead_generation_flutter_app/ui/screens/qr_scan_screen/normal_qr_screen.dart';
 import 'package:lead_generation_flutter_app/utils_backup/custom_colors.dart';
 import 'package:lead_generation_flutter_app/utils_backup/extension.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../store/dropdown_store/dropdown_store.dart';
@@ -204,35 +204,59 @@ class InitQrScreen extends StatelessWidget {
                 width: double.infinity,
                 child: TextButton(
                     onPressed: (() async {
-                      
-                      if(Platform.isAndroid) {
+                      if (Platform.isAndroid) {
                         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                      AndroidDeviceInfo androidInfo =
-                          await deviceInfo.androidInfo;
-            
-                      if (androidInfo.brand.toLowerCase() == "zebra") {
-                        switch (user.userType) {
-                          case 106:
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ZebraScannerExpositorPage(
-                                        user: user,
-                                      )),
-                            );
-                            break;
+                        AndroidDeviceInfo androidInfo =
+                            await deviceInfo.androidInfo;
 
-                          default:
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ZebraScannerPage(
-                                        user: user,
-                                      )),
-                            );
-                            break;
+                        if (androidInfo.brand.toLowerCase() == "zebra") {
+                          switch (user.userType) {
+                            case 106:
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        ZebraScannerExpositorPage(
+                                          user: user,
+                                        )),
+                              );
+                              break;
+
+                            default:
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        ZebraScannerPage(
+                                          user: user,
+                                        )),
+                              );
+                              break;
+                          }
+                        } else {
+                          switch (user.userType) {
+                            case 106:
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        ExpositorQrScreen(
+                                          user: user,
+                                        )),
+                              );
+                              break;
+
+                            default:
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        NormalQrScreen(
+                                          user: user,
+                                        )),
+                              );
+                              break;
+                          }
                         }
                       } else {
                         switch (user.userType) {
@@ -259,32 +283,6 @@ class InitQrScreen extends StatelessWidget {
                             break;
                         }
                       }
-                      }else {
-                        switch (user.userType) {
-                          case 106:
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ExpositorQrScreen(
-                                        user: user,
-                                      )),
-                            );
-                            break;
-
-                          default:
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      NormalQrScreen(
-                                        user: user,
-                                      )),
-                            );
-                            break;
-                        }
-                      }
-                      
 
                       /*if (user!.isAutorizzazione == 0) {
                                 context.pushRoute(QrViewRoute(user: user!));
