@@ -19,6 +19,12 @@ abstract class _FormStore with Store {
   @observable
   String password = '';
 
+  @observable
+  String? errorMessage;
+
+  @observable
+  bool hasError = false;
+
   @action
   void setEmail(String value) {
     email = value;
@@ -41,5 +47,17 @@ abstract class _FormStore with Store {
   @action
   setVisibility(bool value) {
     isVisibile = value;
+  }
+
+  @action
+  void setError(String? message) {
+    errorMessage = message;
+    hasError = message != null;
+  }
+
+  @action
+  void clearError() {
+    errorMessage = null;
+    hasError = false;
   }
 }

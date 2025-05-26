@@ -205,4 +205,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get loginError => 'Errore di login';
+
+  @override
+  String get invalidCredentials => 'Credenziali non valide. Controlla email e password.';
+
+  @override
+  String get networkError => 'Errore di connessione. Riprova più tardi.';
+
+  @override
+  String get genericError => 'Si è verificato un errore. Riprova.';
 }

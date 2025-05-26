@@ -18,11 +18,14 @@ import 'package:lead_generation_flutter_app/l10n/app_localizations.dart';
 
 import '../../model/course_model/course.dart';
 import '../../network/course_service.dart';
+import '../../network/logout_service.dart';
 import '../../provider/dark_theme_provider.dart';
 import '../../provider/envirorment_provider.dart';
 import '../../store/dropdown_store/dropdown_store.dart';
 import '../../store/visibility_store/visibility_store.dart';
+import '../../utils_backup/envirorment.dart';
 import '../components/bazier_container.dart';
+import 'login_screen.dart';
 
 class ChooseScreen extends StatelessWidget {
   final User? user;
@@ -59,6 +62,61 @@ class ChooseScreen extends StatelessWidget {
             ),
           ),
         ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: ThemeHelper.primaryColor,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person,
+                        size: 40,
+                        color: ThemeHelper.primaryColor,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      user?.email ?? 'Utente',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      user?.manifestationName ?? '',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text(AppLocalizations.of(context)!.logout),
+                onTap: () {
+                  Navigator.of(context).pop(); // Chiudi il drawer
+                  Navigator.of(context)
+                      .restorablePush(_dialogBuilder, arguments: {
+                    'idUser': user!.id,
+                    'envirorment':
+                        envirormentProvider.envirormentState.toString()
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
         body: user!.userType != 106 || user!.userType == 110
             ? FutureBuilder(
                 future: getCourses(user!, envirormentProvider),
@@ -79,7 +137,8 @@ class ChooseScreen extends StatelessWidget {
                         ),
                         Observer(builder: ((context) {
                           return Visibility(
-                              visible: visibilityStore.isVisible,
+                              visible: visibilityStore.isVisible &&
+                                  user!.userType != 110,
                               child: Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
@@ -155,7 +214,11 @@ class ChooseScreen extends StatelessWidget {
                                                     dropdownColor:
                                                         Color.fromARGB(
                                                             255, 245, 242, 242),
-                                                    itemHeight: 80,
+                                                    itemHeight: null,
+                                                    menuMaxHeight:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .height,
                                                     isExpanded: true,
                                                     hint: Text(
                                                       AppLocalizations.of(
@@ -174,57 +237,57 @@ class ChooseScreen extends StatelessWidget {
                                                     value: dropDownStore
                                                         .selectedItem,
                                                     onChanged: (value) {
-                                                      if ((value as IdValueObject)
-                                                              .id !=
+                                                      IdValueObject
+                                                          selectedItem = value
+                                                              as IdValueObject;
+
+                                                      if (selectedItem.id !=
                                                           -1) {
-                                                        visibilityStore
-                                                            .setSelected(false);
-                                                        dropDownStore
-                                                            .setSelected(true);
+                                                        // Navigate directly to home screen when a course is selected
+                                                        selectedCourse =
+                                                            getCourse.firstWhere(
+                                                                (element) =>
+                                                                    element
+                                                                        .id ==
+                                                                    selectedItem
+                                                                        .id);
+
+                                                        User updateUser = user!;
+                                                        updateUser.courseId =
+                                                            selectedCourse.id;
+                                                        updateUser.courseName =
+                                                            selectedCourse
+                                                                .description;
+                                                        DatabaseHelper.instance
+                                                            .update(updateUser)
+                                                            .then((value) =>
+                                                                Navigator
+                                                                    .pushAndRemoveUntil(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (BuildContext
+                                                                              context) =>
+                                                                          HomePageScreen(
+                                                                            user:
+                                                                                user!,
+                                                                          )),
+                                                                  ModalRoute
+                                                                      .withName(
+                                                                          '/home'),
+                                                                ));
                                                       } else {
                                                         visibilityStore
                                                             .setSelected(true);
                                                         dropDownStore
                                                             .setSelected(false);
                                                       }
-                                                      IdValueObject
-                                                          selectedItem = value
-                                                              as IdValueObject;
+
                                                       dropDownStore
                                                           .setSelectedItem(
                                                               selectedItem);
-                                                      selectedCourse =
-                                                          getCourse.firstWhere(
-                                                              (element) =>
-                                                                  element.id ==
-                                                                  selectedItem
-                                                                      .id);
                                                     }),
                                               )),
                                     )),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Observer(
-                                  builder: (_) => Align(
-                                    alignment: Alignment.centerRight,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        backgroundColor: Colors.black,
-                                      ),
-                                      onPressed: () {
-                                        clickButtonToScan(
-                                            dropDownStore.isSelected, context);
-                                      },
-                                      child: Text(dropDownStore.isSelected
-                                          ? AppLocalizations.of(context)!
-                                              .go_to_scan
-                                          : AppLocalizations.of(context)!
-                                              .select_event),
-                                    ),
-                                  ),
-                                )
                               ],
                             ))
                       ],
@@ -238,26 +301,6 @@ class ChooseScreen extends StatelessWidget {
                   }
                 }))
             : controlloAccessi(context));
-  }
-
-  void clickButtonToScan(bool enabled, BuildContext context) async {
-    if (enabled) {
-      User updateUser = user!;
-      updateUser.courseId = selectedCourse.id;
-      updateUser.courseName = selectedCourse.description;
-      DatabaseHelper.instance
-          .update(updateUser)
-          .then((value) => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => HomePageScreen(
-                          user: user!,
-                        )),
-                ModalRoute.withName('/home'),
-              ));
-    } else {
-      return;
-    }
   }
 
   Widget controlloAccessi(BuildContext context) {
@@ -307,41 +350,62 @@ class ChooseScreen extends StatelessWidget {
         .map((e) => DropdownMenuItem(
               value: e,
               child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  constraints: BoxConstraints(
+                    minHeight: 48.0, // Minimum touch target size
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10)),
-                  child: Row(children: [
-                    e.id > -1
-                        ? SizedBox(
-                            width: 10,
-                          )
-                        : Container(),
-                    e.id > -1
-                        ? SizedBox(
-                            width: 10,
-                          )
-                        : Container(),
-                    e.id > -1
-                        ? Icon(
-                            Icons.event,
-                            color: ThemeHelper.primaryColor,
-                          )
-                        : Container(),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Flexible(
-                      child: Text(
-                        e.value,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12),
-                      ),
-                    )
-                  ])),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        e.id > -1
+                            ? SizedBox(
+                                width: 10,
+                              )
+                            : Container(),
+                        e.id > -1
+                            ? SizedBox(
+                                width: 10,
+                              )
+                            : Container(),
+                        e.id > -1
+                            ? Icon(
+                                Icons.event,
+                                color: ThemeHelper.primaryColor,
+                                size: 20,
+                              )
+                            : Container(),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        // ID del corso in arancione e grassetto
+                        if (e.id > -1)
+                          Text(
+                            e.id.toString(),
+                            style: const TextStyle(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                          ),
+                        if (e.id > -1)
+                          SizedBox(
+                            width: 8,
+                          ),
+                        Expanded(
+                          child: Text(
+                            e.value,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12),
+                            softWrap: true,
+                          ),
+                        )
+                      ])),
             ))
         .toList();
   }
@@ -362,5 +426,55 @@ class ChooseScreen extends StatelessWidget {
           .add(IdValueObject(id: element.id, value: element.description));
     });
     return idValueList;
+  }
+
+  // Dialog per il logout
+  static Route<Object?> _dialogBuilder(
+    BuildContext context,
+    Object? arguments,
+  ) {
+    Map mapArguments = arguments as Map;
+    int idUser = mapArguments["idUser"];
+    Envirorment envirorment = mapArguments["envirorment"] == "staging"
+        ? Envirorment.staging
+        : Envirorment.production;
+
+    return CupertinoDialogRoute<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(AppLocalizations.of(context)!.titleDialogLogout),
+          content: Text(AppLocalizations.of(context)!.contentDialogLogout),
+          actions: <Widget>[
+            CupertinoDialogAction(
+                child: Text(AppLocalizations.of(context)!.yes),
+                onPressed: () {
+                  requestLogout(idUser, envirorment).then((value) {
+                    if (value > -1) {
+                      DatabaseHelper.instance.delete(idUser).then((value) =>
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
+                              ModalRoute.withName("/login")));
+                    }
+                  });
+                }),
+            CupertinoDialogAction(
+              child: Text(AppLocalizations.of(context)!.no),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static Future<int> requestLogout(int id, Envirorment envirorment) {
+    LogoutService logoutService = LogoutService();
+    Future<int> responseLogout = logoutService.requestLogout(id, envirorment);
+    return responseLogout;
   }
 }

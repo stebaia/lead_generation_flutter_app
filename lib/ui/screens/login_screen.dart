@@ -103,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
         loginService.requestLogin(email, password, envirorment);
     futureUser.then((user) {
       SVProgressHUD.dismiss();
+      formStore.clearError(); // Clear any previous errors
       DatabaseHelper.instance.add(user);
       switch (user.userType) {
         case 107:
@@ -138,6 +139,33 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }).onError((error, stackTrace) {
       SVProgressHUD.dismiss();
+      print("Login error occurred: $error");
+      print("Stack trace: $stackTrace");
+
+      // Handle different types of errors
+      String errorMessage;
+      String errorString = error.toString().toLowerCase();
+
+      if (errorString.contains('socketexception') ||
+          errorString.contains('timeoutexception') ||
+          errorString.contains('handshakeexception') ||
+          errorString.contains('network') ||
+          errorString.contains('connection')) {
+        errorMessage = AppLocalizations.of(buildContext)!.networkError;
+        print("Network error detected");
+      } else if (errorString.contains('invalid credentials') ||
+          errorString.contains('unauthorized') ||
+          errorString.contains('401') ||
+          errorString.contains('authentication') ||
+          errorString.contains('login failed')) {
+        errorMessage = AppLocalizations.of(buildContext)!.invalidCredentials;
+        print("Invalid credentials detected");
+      } else {
+        errorMessage = AppLocalizations.of(buildContext)!
+            .invalidCredentials; // Default to credentials error
+        print("Generic error, defaulting to credentials error: $error");
+      }
+      formStore.setError(errorMessage);
     });
   }
 
@@ -191,6 +219,39 @@ class _LoginScreenState extends State<LoginScreen> {
                   _entryField('Password', textEditingControllerPassword,
                       themeChange.darkTheme,
                       isPassword: true),
+                  // Error message display
+                  Observer(
+                    builder: (context) => formStore.hasError
+                        ? Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.1),
+                              border: Border.all(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    formStore.errorMessage ?? '',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Observer(
@@ -200,6 +261,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 backgroundColor: Colors.black,
                               ),
                               onPressed: () {
+                                formStore
+                                    .clearError(); // Clear any previous errors
                                 formStore
                                     .setEmail(textEditingControllerEmail.text);
                                 formStore.setPassword(

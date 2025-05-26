@@ -64,5 +64,9 @@
   "scan_qr" : "Scan QR code",
   "tap_the_button" : "Tap the button below to the scannerization view",
   "history_check" : "Check scan history",
-  "logout": "Logout"
+  "logout": "Logout",
+  "loginError": "Login Error",
+  "invalidCredentials": "Invalid credentials. Please check your email and password.",
+  "networkError": "Network error. Please try again later.",
+  "genericError": "An error occurred. Please try again."
 }

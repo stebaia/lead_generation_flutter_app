@@ -205,4 +205,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get loginError => 'Login Error';
+
+  @override
+  String get invalidCredentials => 'Invalid credentials. Please check your email and password.';
+
+  @override
+  String get networkError => 'Network error. Please try again later.';
+
+  @override
+  String get genericError => 'An error occurred. Please try again.';
 }

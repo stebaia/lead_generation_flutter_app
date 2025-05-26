@@ -490,6 +490,30 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @loginError.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore di login'**
+  String get loginError;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In it, this message translates to:
+  /// **'Credenziali non valide. Controlla email e password.'**
+  String get invalidCredentials;
+
+  /// No description provided for @networkError.
+  ///
+  /// In it, this message translates to:
+  /// **'Errore di connessione. Riprova più tardi.'**
+  String get networkError;
+
+  /// No description provided for @genericError.
+  ///
+  /// In it, this message translates to:
+  /// **'Si è verificato un errore. Riprova.'**
+  String get genericError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

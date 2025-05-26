@@ -71,6 +71,38 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
+  late final _$errorMessageAtom =
+      Atom(name: '_FormStore.errorMessage', context: context);
+
+  @override
+  String? get errorMessage {
+    _$errorMessageAtom.reportRead();
+    return super.errorMessage;
+  }
+
+  @override
+  set errorMessage(String? value) {
+    _$errorMessageAtom.reportWrite(value, super.errorMessage, () {
+      super.errorMessage = value;
+    });
+  }
+
+  late final _$hasErrorAtom =
+      Atom(name: '_FormStore.hasError', context: context);
+
+  @override
+  bool get hasError {
+    _$hasErrorAtom.reportRead();
+    return super.hasError;
+  }
+
+  @override
+  set hasError(bool value) {
+    _$hasErrorAtom.reportWrite(value, super.hasError, () {
+      super.hasError = value;
+    });
+  }
+
   late final _$_FormStoreActionController =
       ActionController(name: '_FormStore', context: context);
 
@@ -119,12 +151,36 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
+  void setError(String? message) {
+    final _$actionInfo =
+        _$_FormStoreActionController.startAction(name: '_FormStore.setError');
+    try {
+      return super.setError(message);
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearError() {
+    final _$actionInfo =
+        _$_FormStoreActionController.startAction(name: '_FormStore.clearError');
+    try {
+      return super.clearError();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 isValid: ${isValid},
 isVisibile: ${isVisibile},
 email: ${email},
-password: ${password}
+password: ${password},
+errorMessage: ${errorMessage},
+hasError: ${hasError}
     ''';
   }
 }

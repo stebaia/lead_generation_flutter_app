@@ -596,33 +596,7 @@ class _HomePageScreenState extends State<HomePageScreen>
                         },
                       ),
                     // Zebra Mode
-                    ListTile(
-                      leading: Icon(Icons.scanner),
-                      title: Text('Zebra Mode'),
-                      trailing: Icon(CupertinoIcons.chevron_forward),
-                      onTap: () {
-                        Navigator.pop(context);
-                        if (user.userType == 106) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ZebraScannerExpositorPage(
-                                      user: user,
-                                    )),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ZebraScannerPage(
-                                      user: user,
-                                    )),
-                          );
-                        }
-                      },
-                    ),
+
                     // Toggle per la torcia
 
                     Divider(),
@@ -967,12 +941,32 @@ class _HomePageScreenState extends State<HomePageScreen>
                           (IdValueObject valueItem) {
                     return DropdownMenuItem<IdValueObject>(
                       value: valueItem,
-                      child: Text(
-                        valueItem.value,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: isDarkMode ? Colors.white : Colors.black,
-                        ),
+                      child: Row(
+                        children: [
+                          // ID del corso in arancione e grassetto
+                          Text(
+                            valueItem.id.toString(),
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          // Titolo del corso che va a capo
+                          Expanded(
+                            child: Text(
+                              valueItem.value,
+                              style: TextStyle(
+                                color: isDarkMode ? Colors.white : Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              softWrap: true,
+                              maxLines: null,
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }).toList(),

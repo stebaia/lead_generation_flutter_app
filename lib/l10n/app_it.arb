@@ -64,6 +64,10 @@
     "scan_qr" : "Scan QR code",
     "tap_the_button" : "Clicca il bottone sottostante per iniziare la scansione",
     "history_check" : "Vuoi riguardare le scannerizzazioni?",
-    "logout": "Logout"
+    "logout": "Logout",
+    "loginError": "Errore di login",
+    "invalidCredentials": "Credenziali non valide. Controlla email e password.",
+    "networkError": "Errore di connessione. Riprova più tardi.",
+    "genericError": "Si è verificato un errore. Riprova."
 
 }
