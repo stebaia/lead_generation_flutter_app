@@ -106,12 +106,80 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
     _loadCourses();
   }
 
-  List<Widget> tabBarWidget() => [
+  // Metodo per ottenere le tab basate sul tipoAccesso
+  List<Widget> getTabsBasedOnTipoAccesso() {
+    // Ottieni il corso selezionato per verificare il tipoAccesso
+    Course? selectedCourse;
+    if (dropDownStore.selectedItem != null) {
+      selectedCourse = availableCourses.firstWhere(
+        (course) => course.id == dropDownStore.selectedItem!.id,
+        orElse: () => Course(id: -1, description: ""),
+      );
+    }
+
+    // Determina quali tab mostrare basandosi sul tipoAccesso
+    String? tipoAccesso = selectedCourse?.tipoAccesso;
+    List<Widget> tabs = [];
+
+    if (tipoAccesso == null || tipoAccesso == "0") {
+      // Mostra entrambe le tab
+      tabs = [
         Tab(text: 'Entrata'),
-        Tab(
-          text: 'Uscita',
-        )
+        Tab(text: 'Uscita'),
       ];
+    } else if (tipoAccesso == "1") {
+      // Solo entrata
+      tabs = [
+        Tab(text: 'Entrata'),
+      ];
+    } else if (tipoAccesso == "2") {
+      // Solo uscita
+      tabs = [
+        Tab(text: 'Uscita'),
+      ];
+    } else {
+      // Default: entrambe le tab
+      tabs = [
+        Tab(text: 'Entrata'),
+        Tab(text: 'Uscita'),
+      ];
+    }
+
+    // Aggiorna il TabController se necessario
+    if (_controller.length != tabs.length) {
+      _controller.dispose();
+      _controller = TabController(length: tabs.length, vsync: this);
+    }
+
+    return tabs;
+  }
+
+  List<Widget> tabBarWidget() => getTabsBasedOnTipoAccesso();
+
+  // Metodo per ottenere il valore ckExit corretto
+  String getCkExitValue() {
+    // Ottieni il corso selezionato per verificare il tipoAccesso
+    Course? selectedCourse;
+    if (dropDownStore.selectedItem != null) {
+      selectedCourse = availableCourses.firstWhere(
+        (course) => course.id == dropDownStore.selectedItem!.id,
+        orElse: () => Course(id: -1, description: ""),
+      );
+    }
+
+    String? tipoAccesso = selectedCourse?.tipoAccesso;
+
+    if (tipoAccesso == "1") {
+      // Solo entrata
+      return "0";
+    } else if (tipoAccesso == "2") {
+      // Solo uscita
+      return "1";
+    } else {
+      // Entrambi o null - usa l'indice della tab
+      return _controller.index.toString();
+    }
+  }
 
   Future<int> getVisitors() {
     Future<int> requestVisitors = visitorsService.requestVisitors(
@@ -151,7 +219,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
             dataOra: DateTime.now().toString(),
             idCorso: widget.user.courseId!,
             idUtilizzatore: widget.user.id.toString(),
-            ckExit: _controller.index.toString(),
+            ckExit: getCkExitValue(),
           ));
           await DatabaseHelper.instance.getOfflineScan().then(
               (value) => infoCurrentPeopleBoxStore.setScanState(value.length));
@@ -163,7 +231,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                   codiceScan,
                   widget.user.id.toString(),
                   widget.user.courseId.toString(),
-                  _controller.index.toString(),
+                  getCkExitValue(),
                   envirormentProvider.envirormentState)
               .then((mValue) {
             infoCurrentPeopleBoxStore.fetchVisitors(
@@ -191,7 +259,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
             dataOra: DateTime.now().toString(),
             idCorso: 0,
             idUtilizzatore: widget.user.id.toString(),
-            ckExit: _controller.index.toString(),
+            ckExit: getCkExitValue(),
           ));
           await DatabaseHelper.instance.getOfflineScan().then(
               (value) => infoCurrentPeopleBoxStore.setScanState(value.length));
@@ -203,7 +271,7 @@ class _ZebraScannerPageState extends State<ZebraScannerPage>
                   codiceScan,
                   widget.user.id.toString(),
                   "0",
-                  _controller.index.toString(),
+                  getCkExitValue(),
                   envirormentProvider.envirormentState)
               .then((mValue) {
             infoCurrentPeopleBoxStore.fetchVisitors(

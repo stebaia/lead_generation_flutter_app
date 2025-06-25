@@ -161,20 +161,54 @@ class _HomePageScreenState extends State<HomePageScreen>
     return requestVisitors;
   }
 
-  // Helper per le schede Entrata/Uscita
-  List<Widget> tabBarWidget() => [
-        Tab(
-          text: AppLocalizations.of(context)!.enter,
-        ),
-        Tab(
-          text: AppLocalizations.of(context)!.exit,
-        ),
-      ];
-
   // Widget per le tab di Entrata/Uscita
   Widget _buildEntryExitTabs() {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     final isDarkMode = themeChange.darkTheme;
+
+    // Ottieni il corso selezionato per verificare il tipoAccesso
+    Course? selectedCourse;
+    if (dropDownStore.selectedItem != null) {
+      selectedCourse = availableCourses.firstWhere(
+        (course) => course.id == dropDownStore.selectedItem!.id,
+        orElse: () => Course(id: -1, description: ""),
+      );
+    }
+
+    // Determina quali tab mostrare basandosi sul tipoAccesso
+    // 0 = entrambi, 1 = solo entrata, 2 = solo uscita
+    String? tipoAccesso = selectedCourse?.tipoAccesso;
+    List<Widget> tabs = [];
+
+    if (tipoAccesso == null || tipoAccesso == "0") {
+      // Mostra entrambe le tab
+      tabs = [
+        Tab(text: AppLocalizations.of(context)!.enter),
+        Tab(text: AppLocalizations.of(context)!.exit),
+      ];
+    } else if (tipoAccesso == "1") {
+      // Solo entrata
+      tabs = [
+        Tab(text: AppLocalizations.of(context)!.enter),
+      ];
+    } else if (tipoAccesso == "2") {
+      // Solo uscita
+      tabs = [
+        Tab(text: AppLocalizations.of(context)!.exit),
+      ];
+    } else {
+      // Default: entrambe le tab
+      tabs = [
+        Tab(text: AppLocalizations.of(context)!.enter),
+        Tab(text: AppLocalizations.of(context)!.exit),
+      ];
+    }
+
+    // Aggiorna il TabController se necessario
+    if (_tabController.length != tabs.length) {
+      _tabController.dispose();
+      _tabController = TabController(length: tabs.length, vsync: this);
+    }
 
     return Container(
       height: 48,
@@ -192,7 +226,7 @@ class _HomePageScreenState extends State<HomePageScreen>
       ),
       child: TabBar(
         controller: _tabController,
-        tabs: tabBarWidget(),
+        tabs: tabs,
         unselectedLabelColor: isDarkMode ? Colors.grey : Colors.grey.shade600,
         labelColor: isDarkMode ? Colors.white : Colors.black,
         indicatorColor: ThemeHelper.primaryColor,
@@ -223,6 +257,30 @@ class _HomePageScreenState extends State<HomePageScreen>
           lastBarcode = code;
           SoundHelper.play(0, player);
 
+          // Ottieni il corso selezionato per verificare il tipoAccesso
+          Course? selectedCourse;
+          if (dropDownStore.selectedItem != null) {
+            selectedCourse = availableCourses.firstWhere(
+              (course) => course.id == dropDownStore.selectedItem!.id,
+              orElse: () => Course(id: -1, description: ""),
+            );
+          }
+
+          // Determina il valore ckExit basato sul tipoAccesso e sull'indice della tab
+          String ckExit = "0"; // Default entrata
+          String? tipoAccesso = selectedCourse?.tipoAccesso;
+
+          if (tipoAccesso == "1") {
+            // Solo entrata
+            ckExit = "0";
+          } else if (tipoAccesso == "2") {
+            // Solo uscita
+            ckExit = "1";
+          } else {
+            // Entrambi o null - usa l'indice della tab
+            ckExit = _tabController.index.toString();
+          }
+
           final offlineMode =
               Provider.of<OfflineModeProvider>(context, listen: false);
           if (offlineMode.getOfflineMode) {
@@ -233,8 +291,7 @@ class _HomePageScreenState extends State<HomePageScreen>
               dataOra: DateTime.now().toString(),
               idCorso: user.courseId!,
               idUtilizzatore: user.id.toString(),
-              ckExit: _tabController.index
-                  .toString(), // Usa indice tab per distinguere entrata/uscita
+              ckExit: ckExit,
             ));
             DatabaseHelper.instance.getOfflineScan().then((value) =>
                 infoCurrentPeopleBoxStore.setScanState(value.length));
@@ -248,8 +305,7 @@ class _HomePageScreenState extends State<HomePageScreen>
                     codiceScan,
                     user.id.toString(),
                     user.courseId.toString(),
-                    _tabController.index
-                        .toString(), // Usa indice tab per distinguere entrata/uscita
+                    ckExit,
                     envirormentProvider.envirormentState)
                 .then((mValue) {
               infoCurrentPeopleBoxStore.fetchVisitors(

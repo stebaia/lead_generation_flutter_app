@@ -50,11 +50,42 @@ class CourseService {
     GetCorsiResult getCorsiResult =
         corseResponse.soapEnvelope!.soapBody!.getCorsiResponse!.getCorsiResult!;
     List<Course> courseList = [];
-    int index = 0;
+
+    // Group valori by course ID to handle both description and TIPOACCESSO
+    Map<String, Map<String, String>> courseData = {};
+
     getCorsiResult.valori!.forEach((element) {
-      courseList.add(new Course(
-          id: int.parse(element.value!), description: element.description!));
+      String courseId = element.value!;
+      String description = element.description!;
+
+      if (description == "TIPOACCESSO") {
+        // Quando la descrizione è TIPOACCESSO, il Value contiene il tipo accesso
+        // Questo si applica all'ultimo corso processato
+        if (courseData.isNotEmpty) {
+          String lastCourseId = courseData.keys.last;
+          courseData[lastCourseId]!['tipoAccesso'] =
+              courseId; // courseId contiene il tipo accesso (0, 1, 2)
+        }
+      } else {
+        // Entry normale del corso
+        if (!courseData.containsKey(courseId)) {
+          courseData[courseId] = {};
+        }
+        courseData[courseId]!['description'] = description;
+      }
     });
+
+    // Create Course objects from grouped data
+    courseData.forEach((courseId, data) {
+      if (data.containsKey('description')) {
+        courseList.add(Course(
+          id: int.parse(courseId),
+          description: data['description']!,
+          tipoAccesso: data['tipoAccesso'], // Sarà null se non c'è TIPOACCESSO
+        ));
+      }
+    });
+
     return courseList;
   }
 }
